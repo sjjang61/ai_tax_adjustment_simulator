@@ -1,5 +1,14 @@
 import { http, HttpResponse } from 'msw';
 import type {
+  BusinessAllocation,
+  BusinessRead,
+  BusinessRecord,
+  BusinessSummary,
+  PartnershipResult,
+  GlobalIncomeInput,
+  GlobalIncomeResult,
+  GlobalIncomeSimulationRead,
+  GlobalIncomeSimulationSummary,
   ComparisonResult,
   SimulationComparison,
   CoupleOptimizationResult,
@@ -14,8 +23,12 @@ import type {
   TaxResult,
   TaxRules,
 } from '../api/types';
+import businessAllocationFixture from './fixtures/business-allocation.json';
+import businessRecordFixture from './fixtures/business-record.json';
 import comparisonFixture from './fixtures/comparison.json';
+import partnershipFixture from './fixtures/partnership.json';
 import coupleResultFixture from './fixtures/couple-result.json';
+import globalResultFixture from './fixtures/global-result.json';
 import inputFixture from './fixtures/input.json';
 import resultFixture from './fixtures/result.json';
 import rulesFixture from './fixtures/rules-2025.json';
@@ -29,7 +42,34 @@ export const fixtureRules = rulesFixture as TaxRules;
 export const fixtureCoupleResult = coupleResultFixture as CoupleOptimizationResult;
 
 /** 테스트 간 공유되는 가짜 DB. resetDb()로 초기화한다. */
-export const db = { simulations: new Map<number, SimulationRead>(), nextId: 1 };
+export const db = {
+  simulations: new Map<number, SimulationRead>(),
+  globals: new Map<number, GlobalIncomeSimulationRead>(),
+  businesses: new Map<number, BusinessRead>(),
+  nextId: 1,
+};
+export const fixtureGlobalResult = globalResultFixture as GlobalIncomeResult;
+export const fixtureAllocation = businessAllocationFixture as BusinessAllocation;
+export const fixtureBusinessRecord = businessRecordFixture as BusinessRecord;
+export const fixturePartnership = partnershipFixture as PartnershipResult;
+
+export function storeBusiness(id: number, record: BusinessRecord): BusinessRead {
+  const b: BusinessRead = {
+    id,
+    name: record.name,
+    tax_year: record.tax_year,
+    partner_count: record.partners.length,
+    income_amount: fixtureAllocation.income_amount,
+    updated_at: '2026-05-01T00:00:00Z',
+    record: {
+      ...record,
+      expense_rate: String(record.expense_rate ?? '0'),
+    } as BusinessRead['record'],
+    allocation: fixtureAllocation,
+  };
+  db.businesses.set(id, b);
+  return b;
+}
 
 export function makeSimulation(
   partial: Partial<SimulationRead> & Pick<SimulationRead, 'name'>,
@@ -53,6 +93,8 @@ export function makeSimulation(
 
 export function resetDb(): void {
   db.simulations.clear();
+  db.globals.clear();
+  db.businesses.clear();
   db.nextId = 1;
 }
 
@@ -123,7 +165,108 @@ export function makeComparison(base: SimulationRead, input: SimulationInput): Si
   return { base: summary(base), snapshot_differs: false, comparison };
 }
 
+function storeGlobal(
+  id: number,
+  name: string,
+  input: GlobalIncomeInput,
+  sourceId: number | null,
+): GlobalIncomeSimulationRead {
+  const sim: GlobalIncomeSimulationRead = {
+    id,
+    name,
+    tax_year: input.tax_year,
+    total_balance_due: fixtureGlobalResult.total_balance_due,
+    source_simulation_id: sourceId,
+    created_at: '2026-05-01T00:00:00Z',
+    updated_at: '2026-05-01T00:00:00Z',
+    input: {
+      ...input,
+      business_incomes: input.business_incomes.map((b) => ({
+        ...b,
+        expense_rate: String(b.expense_rate),
+      })),
+    } as GlobalIncomeSimulationRead['input'],
+    result: fixtureGlobalResult,
+  };
+  db.globals.set(id, sim);
+  return sim;
+}
+
 export const handlers = [
+  http.post(`${BASE}/businesses/allocate`, () =>
+    HttpResponse.json<BusinessAllocation>(fixtureAllocation),
+  ),
+  http.post(`${BASE}/businesses/partnership`, () =>
+    HttpResponse.json<PartnershipResult>(fixturePartnership),
+  ),
+  http.get(`${BASE}/businesses`, () =>
+    HttpResponse.json<BusinessSummary[]>(
+      [...db.businesses.values()].map((b) => ({
+        id: b.id,
+        name: b.name,
+        tax_year: b.tax_year,
+        partner_count: b.partner_count,
+        income_amount: b.income_amount,
+        updated_at: b.updated_at,
+      })),
+    ),
+  ),
+  http.post(`${BASE}/businesses`, async ({ request }) => {
+    const body = (await request.json()) as { record: BusinessRecord };
+    return HttpResponse.json(storeBusiness(db.nextId++, body.record), { status: 201 });
+  }),
+  http.get(`${BASE}/businesses/:id`, ({ params }) => {
+    const b = db.businesses.get(Number(params.id));
+    return b
+      ? HttpResponse.json(b)
+      : HttpResponse.json({ code: 'not_found', message: 'x', details: null }, { status: 404 });
+  }),
+  http.put(`${BASE}/businesses/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as { record: BusinessRecord };
+    return HttpResponse.json(storeBusiness(Number(params.id), body.record));
+  }),
+  http.delete(`${BASE}/businesses/:id`, ({ params }) => {
+    db.businesses.delete(Number(params.id));
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.post(`${BASE}/global-income/calculate`, () =>
+    HttpResponse.json<GlobalIncomeResult>(fixtureGlobalResult),
+  ),
+  http.get(`${BASE}/global-income/simulations`, () =>
+    HttpResponse.json<GlobalIncomeSimulationSummary[]>(
+      [...db.globals.values()].map(({ input: _i, result: _r, ...rest }) => {
+        void _i;
+        void _r;
+        return rest;
+      }),
+    ),
+  ),
+  http.post(`${BASE}/global-income/simulations`, async ({ request }) => {
+    const body = (await request.json()) as {
+      name: string;
+      input: GlobalIncomeInput;
+      source_simulation_id: number | null;
+    };
+    const sim = storeGlobal(db.nextId++, body.name, body.input, body.source_simulation_id);
+    return HttpResponse.json(sim, { status: 201 });
+  }),
+  http.get(`${BASE}/global-income/simulations/:id`, ({ params }) => {
+    const sim = db.globals.get(Number(params.id));
+    return sim
+      ? HttpResponse.json(sim)
+      : HttpResponse.json({ code: 'not_found', message: 'x', details: null }, { status: 404 });
+  }),
+  http.put(`${BASE}/global-income/simulations/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as { name: string; input: GlobalIncomeInput };
+    const prev = db.globals.get(Number(params.id));
+    return HttpResponse.json(
+      storeGlobal(Number(params.id), body.name, body.input, prev?.source_simulation_id ?? null),
+    );
+  }),
+  http.delete(`${BASE}/global-income/simulations/:id`, ({ params }) => {
+    db.globals.delete(Number(params.id));
+    return new HttpResponse(null, { status: 204 });
+  }),
   http.post(`${BASE}/simulations/:id/compare`, async ({ params, request }) => {
     const base = db.simulations.get(Number(params.id));
     if (!base) {

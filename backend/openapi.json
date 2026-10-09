@@ -1031,6 +1031,823 @@
         }
       }
     },
+    "/api/v1/global-income/calculate": {
+      "post": {
+        "tags": [
+          "global-income"
+        ],
+        "summary": "종합소득세 계산 (근로 + 사업 + 기타소득, 저장하지 않음)",
+        "operationId": "calculate_global_income_api_v1_global_income_calculate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GlobalIncomeInput-Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalIncomeResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/global-income/simulations": {
+      "post": {
+        "tags": [
+          "global-income"
+        ],
+        "summary": "Create Global Simulation",
+        "operationId": "create_global_simulation_api_v1_global_income_simulations_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GlobalIncomeSimulationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalIncomeSimulationRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "global-income"
+        ],
+        "summary": "List Global Simulations",
+        "operationId": "list_global_simulations_api_v1_global_income_simulations_get",
+        "parameters": [
+          {
+            "name": "tax_year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tax Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GlobalIncomeSimulationSummary"
+                  },
+                  "title": "Response List Global Simulations Api V1 Global Income Simulations Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/global-income/simulations/{sim_id}": {
+      "get": {
+        "tags": [
+          "global-income"
+        ],
+        "summary": "Get Global Simulation",
+        "operationId": "get_global_simulation_api_v1_global_income_simulations__sim_id__get",
+        "parameters": [
+          {
+            "name": "sim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Sim Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalIncomeSimulationRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "global-income"
+        ],
+        "summary": "Update Global Simulation",
+        "operationId": "update_global_simulation_api_v1_global_income_simulations__sim_id__put",
+        "parameters": [
+          {
+            "name": "sim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Sim Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GlobalIncomeSimulationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalIncomeSimulationRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "global-income"
+        ],
+        "summary": "Delete Global Simulation",
+        "operationId": "delete_global_simulation_api_v1_global_income_simulations__sim_id__delete",
+        "parameters": [
+          {
+            "name": "sim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Sim Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/businesses/allocate": {
+      "post": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "사업장 소득금액을 손익분배비율대로 배분 (저장하지 않음)",
+        "operationId": "allocate_business_api_v1_businesses_allocate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BusinessRecord-Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessAllocation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/businesses/partnership": {
+      "post": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "공동사업자 일괄 종합소득세 계산 (각자의 연말정산 결과 + 지분만큼의 사업소득)",
+        "operationId": "calculate_partnership_api_v1_businesses_partnership_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BusinessRecord-Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnershipResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/businesses": {
+      "post": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "Create Business",
+        "operationId": "create_business_api_v1_businesses_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BusinessSave"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "List Businesses",
+        "operationId": "list_businesses_api_v1_businesses_get",
+        "parameters": [
+          {
+            "name": "tax_year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tax Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BusinessSummary"
+                  },
+                  "title": "Response List Businesses Api V1 Businesses Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/businesses/{business_id}": {
+      "get": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "Get Business",
+        "operationId": "get_business_api_v1_businesses__business_id__get",
+        "parameters": [
+          {
+            "name": "business_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Business Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "Update Business",
+        "operationId": "update_business_api_v1_businesses__business_id__put",
+        "parameters": [
+          {
+            "name": "business_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Business Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BusinessSave"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "businesses"
+        ],
+        "summary": "Delete Business",
+        "operationId": "delete_business_api_v1_businesses__business_id__delete",
+        "parameters": [
+          {
+            "name": "business_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Business Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -1118,6 +1935,429 @@
         ],
         "title": "BreakdownItem",
         "description": "공제·세액공제 항목 하나의 계산 내역.\n\n- applied_amount: 공제 적용 대상 금액(입력 사용액·납입액 등) 또는 인원·건수 (applied_unit)\n- amount: 최종 공제액 (소득공제액 또는 세액공제액, 원)\n- limited: 한도·요건으로 공제액이 줄었는지 여부"
+      },
+      "BusinessAllocation": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "revenue": {
+            "type": "integer",
+            "title": "Revenue"
+          },
+          "expenses": {
+            "type": "integer",
+            "title": "Expenses"
+          },
+          "income_amount": {
+            "type": "integer",
+            "title": "Income Amount"
+          },
+          "withholding_tax": {
+            "type": "integer",
+            "title": "Withholding Tax"
+          },
+          "expense_note": {
+            "type": "string",
+            "title": "Expense Note"
+          },
+          "partners": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerShare"
+            },
+            "type": "array",
+            "title": "Partners"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "tax_year",
+          "revenue",
+          "expenses",
+          "income_amount",
+          "withholding_tax",
+          "expense_note",
+          "partners"
+        ],
+        "title": "BusinessAllocation"
+      },
+      "BusinessIncome-Input": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Name",
+            "default": ""
+          },
+          "revenue": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Revenue",
+            "description": "총수입금액"
+          },
+          "expense_method": {
+            "$ref": "#/components/schemas/ExpenseMethod",
+            "default": "rate"
+          },
+          "expenses": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Expenses",
+            "description": "장부 방식의 필요경비",
+            "default": 0
+          },
+          "expense_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Expense Rate",
+            "description": "경비율(%) — 국세청 업종별 경비율 조회",
+            "default": "0"
+          },
+          "withholding_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Withholding Tax",
+            "description": "원천징수된 소득세. 비우면 총수입금액 × 3%로 추정"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revenue"
+        ],
+        "title": "BusinessIncome"
+      },
+      "BusinessIncome-Output": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Name",
+            "default": ""
+          },
+          "revenue": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Revenue",
+            "description": "총수입금액"
+          },
+          "expense_method": {
+            "$ref": "#/components/schemas/ExpenseMethod",
+            "default": "rate"
+          },
+          "expenses": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Expenses",
+            "description": "장부 방식의 필요경비",
+            "default": 0
+          },
+          "expense_rate": {
+            "type": "string",
+            "title": "Expense Rate",
+            "description": "경비율(%) — 국세청 업종별 경비율 조회",
+            "default": "0"
+          },
+          "withholding_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Withholding Tax",
+            "description": "원천징수된 소득세. 비우면 총수입금액 × 3%로 추정"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revenue"
+        ],
+        "title": "BusinessIncome"
+      },
+      "BusinessRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "partner_count": {
+            "type": "integer",
+            "title": "Partner Count"
+          },
+          "income_amount": {
+            "type": "integer",
+            "title": "Income Amount"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "record": {
+            "$ref": "#/components/schemas/BusinessRecord-Output"
+          },
+          "allocation": {
+            "$ref": "#/components/schemas/BusinessAllocation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tax_year",
+          "partner_count",
+          "income_amount",
+          "updated_at",
+          "record",
+          "allocation"
+        ],
+        "title": "BusinessRead"
+      },
+      "BusinessRecord-Input": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Tax Year"
+          },
+          "revenue": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Revenue"
+          },
+          "expense_method": {
+            "$ref": "#/components/schemas/ExpenseMethod",
+            "default": "book"
+          },
+          "expenses": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Expenses",
+            "default": 0
+          },
+          "expense_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Expense Rate",
+            "default": "0"
+          },
+          "withholding_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Withholding Tax",
+            "description": "사업장 전체 원천징수세액. 비우면 총수입금액 × 3%로 추정"
+          },
+          "partners": {
+            "items": {
+              "$ref": "#/components/schemas/Partner"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Partners"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "tax_year",
+          "revenue",
+          "partners"
+        ],
+        "title": "BusinessRecord",
+        "description": "사업자 소득관리 레코드 (사업장 단위)."
+      },
+      "BusinessRecord-Output": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Tax Year"
+          },
+          "revenue": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Revenue"
+          },
+          "expense_method": {
+            "$ref": "#/components/schemas/ExpenseMethod",
+            "default": "book"
+          },
+          "expenses": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Expenses",
+            "default": 0
+          },
+          "expense_rate": {
+            "type": "string",
+            "title": "Expense Rate",
+            "default": "0"
+          },
+          "withholding_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Withholding Tax",
+            "description": "사업장 전체 원천징수세액. 비우면 총수입금액 × 3%로 추정"
+          },
+          "partners": {
+            "items": {
+              "$ref": "#/components/schemas/Partner"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Partners"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "tax_year",
+          "revenue",
+          "partners"
+        ],
+        "title": "BusinessRecord",
+        "description": "사업자 소득관리 레코드 (사업장 단위)."
+      },
+      "BusinessSave": {
+        "properties": {
+          "record": {
+            "$ref": "#/components/schemas/BusinessRecord-Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "record"
+        ],
+        "title": "BusinessSave"
+      },
+      "BusinessSummary": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "partner_count": {
+            "type": "integer",
+            "title": "Partner Count"
+          },
+          "income_amount": {
+            "type": "integer",
+            "title": "Income Amount"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tax_year",
+          "partner_count",
+          "income_amount",
+          "updated_at"
+        ],
+        "title": "BusinessSummary"
       },
       "CalcWarning": {
         "properties": {
@@ -1906,6 +3146,441 @@
         ],
         "title": "ErrorResponse"
       },
+      "ExpenseMethod": {
+        "type": "string",
+        "enum": [
+          "book",
+          "rate"
+        ],
+        "title": "ExpenseMethod"
+      },
+      "GlobalIncomeInput-Input": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Tax Year"
+          },
+          "base": {
+            "$ref": "#/components/schemas/SimulationInput",
+            "description": "근로소득·인적공제·공제 입력 (근로소득이 없으면 급여 0)"
+          },
+          "earned_prepaid_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Earned Prepaid Tax",
+            "description": "근로소득 기납부세액(연말정산 결정세액). 비우면 연말정산 결정세액으로 계산"
+          },
+          "business_incomes": {
+            "items": {
+              "$ref": "#/components/schemas/BusinessIncome-Input"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Business Incomes",
+            "default": []
+          },
+          "other_incomes": {
+            "items": {
+              "$ref": "#/components/schemas/OtherIncome"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Other Incomes",
+            "default": []
+          },
+          "other_income_taxation": {
+            "$ref": "#/components/schemas/OtherIncomeTaxation",
+            "default": "auto"
+          },
+          "interim_prepayment": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Interim Prepayment",
+            "description": "중간예납세액",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "base"
+        ],
+        "title": "GlobalIncomeInput"
+      },
+      "GlobalIncomeInput-Output": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Tax Year"
+          },
+          "base": {
+            "$ref": "#/components/schemas/SimulationInput",
+            "description": "근로소득·인적공제·공제 입력 (근로소득이 없으면 급여 0)"
+          },
+          "earned_prepaid_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Earned Prepaid Tax",
+            "description": "근로소득 기납부세액(연말정산 결정세액). 비우면 연말정산 결정세액으로 계산"
+          },
+          "business_incomes": {
+            "items": {
+              "$ref": "#/components/schemas/BusinessIncome-Output"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Business Incomes",
+            "default": []
+          },
+          "other_incomes": {
+            "items": {
+              "$ref": "#/components/schemas/OtherIncome"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Other Incomes",
+            "default": []
+          },
+          "other_income_taxation": {
+            "$ref": "#/components/schemas/OtherIncomeTaxation",
+            "default": "auto"
+          },
+          "interim_prepayment": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Interim Prepayment",
+            "description": "중간예납세액",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "base"
+        ],
+        "title": "GlobalIncomeInput"
+      },
+      "GlobalIncomeResult": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "rules_verified": {
+            "type": "boolean",
+            "title": "Rules Verified"
+          },
+          "income_lines": {
+            "items": {
+              "$ref": "#/components/schemas/IncomeLine"
+            },
+            "type": "array",
+            "title": "Income Lines"
+          },
+          "earned_income_amount": {
+            "type": "integer",
+            "title": "Earned Income Amount"
+          },
+          "business_income_amount": {
+            "type": "integer",
+            "title": "Business Income Amount"
+          },
+          "other_income_amount": {
+            "type": "integer",
+            "title": "Other Income Amount"
+          },
+          "comprehensive_income_amount": {
+            "type": "integer",
+            "title": "Comprehensive Income Amount"
+          },
+          "other_income_taxation": {
+            "type": "string",
+            "enum": [
+              "comprehensive",
+              "separate",
+              "none"
+            ],
+            "title": "Other Income Taxation"
+          },
+          "separate_tax": {
+            "type": "integer",
+            "title": "Separate Tax"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/TaxationOption"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "prepaid": {
+            "$ref": "#/components/schemas/PrepaidBreakdown"
+          },
+          "tax_result": {
+            "$ref": "#/components/schemas/TaxResult"
+          },
+          "total_balance_due": {
+            "type": "integer",
+            "title": "Total Balance Due"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/CalcWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "rules_verified",
+          "income_lines",
+          "earned_income_amount",
+          "business_income_amount",
+          "other_income_amount",
+          "comprehensive_income_amount",
+          "other_income_taxation",
+          "separate_tax",
+          "options",
+          "prepaid",
+          "tax_result",
+          "total_balance_due",
+          "warnings",
+          "disclaimer"
+        ],
+        "title": "GlobalIncomeResult"
+      },
+      "GlobalIncomeRules": {
+        "properties": {
+          "business_withholding_rate": {
+            "type": "string",
+            "title": "Business Withholding Rate"
+          },
+          "other_withholding_rate": {
+            "type": "string",
+            "title": "Other Withholding Rate"
+          },
+          "other_deemed_expense_rate": {
+            "type": "string",
+            "title": "Other Deemed Expense Rate"
+          },
+          "other_separate_threshold": {
+            "type": "integer",
+            "title": "Other Separate Threshold"
+          },
+          "other_separate_rate": {
+            "type": "string",
+            "title": "Other Separate Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "business_withholding_rate",
+          "other_withholding_rate",
+          "other_deemed_expense_rate",
+          "other_separate_threshold",
+          "other_separate_rate"
+        ],
+        "title": "GlobalIncomeRules",
+        "description": "종합소득세(사업·기타소득) 규칙."
+      },
+      "GlobalIncomeSimulationCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "input": {
+            "$ref": "#/components/schemas/GlobalIncomeInput-Input"
+          },
+          "source_simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Simulation Id",
+            "description": "불러온 연말정산 시뮬레이션 id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "input"
+        ],
+        "title": "GlobalIncomeSimulationCreate"
+      },
+      "GlobalIncomeSimulationRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "total_balance_due": {
+            "type": "integer",
+            "title": "Total Balance Due"
+          },
+          "source_simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Simulation Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "input": {
+            "$ref": "#/components/schemas/GlobalIncomeInput-Output"
+          },
+          "result": {
+            "$ref": "#/components/schemas/GlobalIncomeResult"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tax_year",
+          "total_balance_due",
+          "source_simulation_id",
+          "created_at",
+          "updated_at",
+          "input",
+          "result"
+        ],
+        "title": "GlobalIncomeSimulationRead"
+      },
+      "GlobalIncomeSimulationSummary": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "total_balance_due": {
+            "type": "integer",
+            "title": "Total Balance Due"
+          },
+          "source_simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Simulation Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tax_year",
+          "total_balance_due",
+          "source_simulation_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "GlobalIncomeSimulationSummary"
+      },
+      "GlobalIncomeSimulationUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "input": {
+            "$ref": "#/components/schemas/GlobalIncomeInput-Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "input"
+        ],
+        "title": "GlobalIncomeSimulationUpdate"
+      },
       "HousingRules": {
         "properties": {
           "subscription_rate": {
@@ -2065,6 +3740,55 @@
         "additionalProperties": false,
         "type": "object",
         "title": "IncomeDeductionInput"
+      },
+      "IncomeLine": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "earned",
+              "business",
+              "other"
+            ],
+            "title": "Kind"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "revenue": {
+            "type": "integer",
+            "title": "Revenue"
+          },
+          "expenses": {
+            "type": "integer",
+            "title": "Expenses"
+          },
+          "income_amount": {
+            "type": "integer",
+            "title": "Income Amount"
+          },
+          "withholding_tax": {
+            "type": "integer",
+            "title": "Withholding Tax"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "name",
+          "revenue",
+          "expenses",
+          "income_amount",
+          "withholding_tax"
+        ],
+        "title": "IncomeLine"
       },
       "InputDiff": {
         "properties": {
@@ -2412,6 +4136,235 @@
         "title": "NationalGrowthFundRules",
         "description": "국민참여형 국민성장펀드 투자 소득공제 (2026년 귀속 신설)."
       },
+      "OtherIncome": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Name",
+            "default": ""
+          },
+          "kind": {
+            "$ref": "#/components/schemas/OtherIncomeKind",
+            "default": "deemed_expense"
+          },
+          "revenue": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Revenue",
+            "description": "총수입금액 (지급액)"
+          },
+          "expenses": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Expenses",
+            "description": "실제 필요경비",
+            "default": 0
+          },
+          "withholding_tax": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000000000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Withholding Tax",
+            "description": "원천징수된 소득세. 비우면 기타소득금액 × 20%로 추정"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revenue"
+        ],
+        "title": "OtherIncome"
+      },
+      "OtherIncomeKind": {
+        "type": "string",
+        "enum": [
+          "deemed_expense",
+          "actual"
+        ],
+        "title": "OtherIncomeKind"
+      },
+      "OtherIncomeTaxation": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "comprehensive",
+          "separate"
+        ],
+        "title": "OtherIncomeTaxation"
+      },
+      "Partner": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "share": {
+            "type": "integer",
+            "maximum": 1000000.0,
+            "minimum": 1.0,
+            "title": "Share",
+            "description": "손익분배비율 지분 (예: 6:4면 6과 4)"
+          },
+          "simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Simulation Id",
+            "description": "이 사업자의 연말정산 시뮬레이션 (근로소득)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "share"
+        ],
+        "title": "Partner"
+      },
+      "PartnerResult": {
+        "properties": {
+          "partner": {
+            "$ref": "#/components/schemas/PartnerShare"
+          },
+          "simulation_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Simulation Name"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          },
+          "input": {
+            "$ref": "#/components/schemas/GlobalIncomeInput-Output"
+          },
+          "result": {
+            "$ref": "#/components/schemas/GlobalIncomeResult"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "partner",
+          "simulation_name",
+          "notes",
+          "input",
+          "result"
+        ],
+        "title": "PartnerResult"
+      },
+      "PartnerShare": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "share": {
+            "type": "integer",
+            "title": "Share"
+          },
+          "ratio": {
+            "type": "string",
+            "title": "Ratio"
+          },
+          "simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Simulation Id"
+          },
+          "revenue": {
+            "type": "integer",
+            "title": "Revenue"
+          },
+          "expenses": {
+            "type": "integer",
+            "title": "Expenses"
+          },
+          "income_amount": {
+            "type": "integer",
+            "title": "Income Amount"
+          },
+          "withholding_tax": {
+            "type": "integer",
+            "title": "Withholding Tax"
+          },
+          "business_income": {
+            "$ref": "#/components/schemas/BusinessIncome-Output"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "share",
+          "ratio",
+          "simulation_id",
+          "revenue",
+          "expenses",
+          "income_amount",
+          "withholding_tax",
+          "business_income"
+        ],
+        "title": "PartnerShare"
+      },
+      "PartnershipResult": {
+        "properties": {
+          "allocation": {
+            "$ref": "#/components/schemas/BusinessAllocation"
+          },
+          "partners": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerResult"
+            },
+            "type": "array",
+            "title": "Partners"
+          },
+          "combined_total_balance_due": {
+            "type": "integer",
+            "title": "Combined Total Balance Due"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "allocation",
+          "partners",
+          "combined_total_balance_due"
+        ],
+        "title": "PartnershipResult"
+      },
       "PensionAccountRules": {
         "properties": {
           "savings_limit": {
@@ -2425,6 +4378,10 @@
           "high_rate_gross_salary_limit": {
             "type": "integer",
             "title": "High Rate Gross Salary Limit"
+          },
+          "high_rate_income_limit": {
+            "type": "integer",
+            "title": "High Rate Income Limit"
           },
           "high_rate": {
             "type": "string",
@@ -2441,6 +4398,7 @@
           "savings_limit",
           "combined_limit",
           "high_rate_gross_salary_limit",
+          "high_rate_income_limit",
           "high_rate",
           "low_rate"
         ],
@@ -2571,6 +4529,40 @@
           "combined_total_balance_due"
         ],
         "title": "PlanSummary"
+      },
+      "PrepaidBreakdown": {
+        "properties": {
+          "earned_settled": {
+            "type": "integer",
+            "title": "Earned Settled"
+          },
+          "business_withholding": {
+            "type": "integer",
+            "title": "Business Withholding"
+          },
+          "other_withholding": {
+            "type": "integer",
+            "title": "Other Withholding"
+          },
+          "interim_prepayment": {
+            "type": "integer",
+            "title": "Interim Prepayment"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "earned_settled",
+          "business_withholding",
+          "other_withholding",
+          "interim_prepayment",
+          "total"
+        ],
+        "title": "PrepaidBreakdown"
       },
       "PrepaidTax": {
         "properties": {
@@ -3642,6 +5634,10 @@
             "type": "integer",
             "title": "Standard Credit"
           },
+          "standard_credit_non_earned": {
+            "type": "integer",
+            "title": "Standard Credit Non Earned"
+          },
           "marriage_credit": {
             "anyOf": [
               {
@@ -3656,6 +5652,9 @@
           "local_income_tax_rate": {
             "type": "string",
             "title": "Local Income Tax Rate"
+          },
+          "global_income": {
+            "$ref": "#/components/schemas/GlobalIncomeRules"
           }
         },
         "additionalProperties": false,
@@ -3681,11 +5680,61 @@
           "donation_credit",
           "rent_credit",
           "standard_credit",
+          "standard_credit_non_earned",
           "marriage_credit",
-          "local_income_tax_rate"
+          "local_income_tax_rate",
+          "global_income"
         ],
         "title": "TaxRules",
         "description": "한 귀속연도의 근로소득 연말정산 규칙 묶음."
+      },
+      "TaxationOption": {
+        "properties": {
+          "taxation": {
+            "type": "string",
+            "enum": [
+              "comprehensive",
+              "separate"
+            ],
+            "title": "Taxation"
+          },
+          "comprehensive_income_amount": {
+            "type": "integer",
+            "title": "Comprehensive Income Amount"
+          },
+          "determined_tax": {
+            "type": "integer",
+            "title": "Determined Tax"
+          },
+          "local_income_tax": {
+            "type": "integer",
+            "title": "Local Income Tax"
+          },
+          "separate_tax": {
+            "type": "integer",
+            "title": "Separate Tax"
+          },
+          "separate_local_tax": {
+            "type": "integer",
+            "title": "Separate Local Tax"
+          },
+          "total_burden": {
+            "type": "integer",
+            "title": "Total Burden"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "taxation",
+          "comprehensive_income_amount",
+          "determined_tax",
+          "local_income_tax",
+          "separate_tax",
+          "separate_local_tax",
+          "total_burden"
+        ],
+        "title": "TaxationOption"
       },
       "Taxpayer": {
         "properties": {

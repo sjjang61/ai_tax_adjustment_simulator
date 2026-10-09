@@ -30,14 +30,21 @@ def monthly_rent_credit(
     )
 
 
-def standard_credit(rules: TaxRules) -> BreakdownItem:
+def standard_credit(rules: TaxRules, has_earned_income: bool = True) -> BreakdownItem:
+    if has_earned_income:
+        amount, desc = (
+            rules.standard_credit,
+            "특별소득공제·특별세액공제·월세세액공제를 신청하지 않은 근로자",
+        )
+    else:
+        amount, desc = rules.standard_credit_non_earned, "근로소득이 없는 종합소득자"
     return BreakdownItem(
         key="standard_credit",
         label="표준세액공제",
         applied_unit=AppliedUnit.COUNT,
         applied_amount=0,
-        amount=rules.standard_credit,
-        description="특별소득공제·특별세액공제·월세세액공제를 신청하지 않은 근로자",
+        amount=amount,
+        description=desc,
     )
 
 

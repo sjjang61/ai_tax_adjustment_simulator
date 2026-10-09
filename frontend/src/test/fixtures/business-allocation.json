@@ -1,0 +1,47 @@
+{
+  "name": "공동 스튜디오",
+  "tax_year": 2025,
+  "revenue": 100000000,
+  "expenses": 40000000,
+  "income_amount": 60000000,
+  "withholding_tax": 3000000,
+  "expense_note": "장부, 원천징수 3% 추정",
+  "partners": [
+    {
+      "name": "김대표",
+      "share": 6,
+      "ratio": "60%",
+      "simulation_id": 1,
+      "revenue": 60000000,
+      "expenses": 24000000,
+      "income_amount": 36000000,
+      "withholding_tax": 1800000,
+      "business_income": {
+        "name": "공동 스튜디오 (지분 60%)",
+        "revenue": 60000000,
+        "expense_method": "book",
+        "expenses": 24000000,
+        "expense_rate": "0",
+        "withholding_tax": 1800000
+      }
+    },
+    {
+      "name": "이대표",
+      "share": 4,
+      "ratio": "40%",
+      "simulation_id": null,
+      "revenue": 40000000,
+      "expenses": 16000000,
+      "income_amount": 24000000,
+      "withholding_tax": 1200000,
+      "business_income": {
+        "name": "공동 스튜디오 (지분 40%)",
+        "revenue": 40000000,
+        "expense_method": "book",
+        "expenses": 16000000,
+        "expense_rate": "0",
+        "withholding_tax": 1200000
+      }
+    }
+  ]
+}

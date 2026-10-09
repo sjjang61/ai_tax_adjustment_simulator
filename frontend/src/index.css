@@ -1523,3 +1523,157 @@ input[type='checkbox'] {
   padding-left: 1.1rem;
   color: var(--text);
 }
+
+/* 상단 보조 메뉴 (섹션별) */
+.app__subnav {
+  border-top: 1px solid var(--border);
+}
+.app__subnav-inner {
+  display: flex;
+  gap: 0.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.35rem 16px;
+}
+.app__subnav a {
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.app__subnav a:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+.app__subnav a.active {
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--primary-weak);
+}
+
+/* 종합소득세 */
+.hero__cta {
+  display: inline-block;
+  margin-top: 1rem;
+  text-decoration: none;
+}
+.income-item {
+  margin-bottom: 1rem;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+.income-item__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.withholding {
+  margin-top: 0.6rem;
+}
+.fresh-start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.table-scroll {
+  overflow-x: auto;
+}
+.income-table {
+  min-width: 560px;
+}
+.tag--business {
+  background: var(--warning-weak);
+  color: var(--warning);
+}
+.tag--other {
+  background: var(--refund-weak);
+  color: var(--refund);
+}
+.sim-list__item--global {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+@media (max-width: 560px) {
+  .app__nav a {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  .app__title {
+    display: none;
+  }
+}
+
+/* 사업자 관리 · 공동대표 */
+.partner-row {
+  grid-template-columns: minmax(120px, 1.2fr) minmax(70px, 0.5fr) minmax(160px, 1.5fr) auto;
+}
+@media (max-width: 640px) {
+  .partner-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.partner-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+.partner-card {
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.partner-card.summary--payment {
+  border-color: color-mix(in srgb, var(--payment) 35%, var(--border));
+}
+.partner-card.summary--refund {
+  border-color: color-mix(in srgb, var(--refund) 35%, var(--border));
+}
+.partner-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.partner-card__amount {
+  margin: 0.4rem 0 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+.summary--payment .partner-card__amount {
+  color: var(--payment);
+}
+.summary--refund .partner-card__amount {
+  color: var(--refund);
+}
+.partner-card__list {
+  margin: 0;
+}
+.partner-card__list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  font-size: 0.88rem;
+}
+.partner-card__list dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.partner-card__notes {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  color: var(--warning);
+}
+.partnership > * + * {
+  margin-top: 1.1rem;
+}
+.business-form > * + * {
+  margin-top: 1rem;
+}

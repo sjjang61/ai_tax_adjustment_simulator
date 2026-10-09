@@ -10,6 +10,7 @@
 """
 
 from dataclasses import dataclass
+from decimal import Decimal
 
 from app.tax.credits.child import child_credit
 from app.tax.credits.donation import donation_credits
@@ -22,14 +23,14 @@ from app.tax.credits.pension_account import pension_account_credit
 from app.tax.deductions.aggregate_limit import aggregate_limit_adjustment
 from app.tax.deductions.card import card_deduction
 from app.tax.deductions.earned_income import earned_income_deduction
-from app.tax.deductions.housing import housing_deductions
+from app.tax.deductions.housing import HousingDeductions, housing_deductions
 from app.tax.deductions.insurance import pension_insurance_deduction, social_insurance_deduction
 from app.tax.deductions.national_growth_fund import national_growth_fund_deduction
 from app.tax.deductions.personal import personal_deduction
 from app.tax.deductions.venture import venture_deduction
 from app.tax.eligibility import Eligibility, evaluate
 from app.tax.inputs import SimulationInput
-from app.tax.money import apply_rate, format_percent, truncate_to_10_won
+from app.tax.money import apply_rate, format_percent, truncate_to_10_won, truncate_won
 from app.tax.result import (
     BreakdownItem,
     CalcWarning,
@@ -75,13 +76,17 @@ def _group(key: str, label: str, children: tuple[BreakdownItem, ...]) -> Breakdo
     )
 
 
-def _excluded(item: BreakdownItem) -> BreakdownItem:
-    """표준세액공제 방식에서 제외되는 항목을 0원으로 표시한다."""
+STANDARD_EXCLUDED = "표준세액공제 선택 시 미적용"
+NO_EARNED_EXCLUDED = "근로소득이 없어 공제 대상이 아님 (근로소득자만 적용)"
+
+
+def _excluded(item: BreakdownItem, reason: str = STANDARD_EXCLUDED) -> BreakdownItem:
+    """적용되지 않는 항목(표준세액공제 선택, 근로소득 없음 등)을 0원으로 표시한다."""
     return item.model_copy(
         update={
             "amount": 0,
             "limited": item.applied_amount > 0,
-            "description": "표준세액공제 선택 시 미적용" if item.applied_amount else "",
+            "description": reason if item.applied_amount else "",
             "children": (),
         }
     )
@@ -111,6 +116,36 @@ def _cap_credits(
     return tuple(capped), calculated_tax - remaining
 
 
+def _earned_income_credit(
+    calculated_tax: int,
+    gross: int,
+    earned_income_amount: int,
+    comprehensive: int,
+    extra_income: int,
+    rules: TaxRules,
+) -> BreakdownItem:
+    """근로소득세액공제는 '근로소득에 대한 종합소득산출세액'에 적용한다 (소득세법 제59조 제1항).
+
+    근로소득 외 종합소득이 있으면 산출세액 × 근로소득금액 / 종합소득금액 (원 미만 절사).
+    """
+    if gross <= 0:
+        return _excluded(earned_income_credit(0, gross, rules), NO_EARNED_EXCLUDED)
+    if extra_income == 0 or comprehensive == 0:
+        return earned_income_credit(calculated_tax, gross, rules)
+    earned_tax = truncate_won(
+        Decimal(calculated_tax) * min(earned_income_amount, comprehensive) / comprehensive
+    )
+    item = earned_income_credit(earned_tax, gross, rules)
+    return item.model_copy(
+        update={
+            "description": (
+                f"근로소득 비율({earned_income_amount:,}/{comprehensive:,})만큼의 산출세액 "
+                f"{earned_tax:,}원 기준: {item.description}"
+            )
+        }
+    )
+
+
 def _run_scenario(
     method: CreditMethod,
     inp: SimulationInput,
@@ -118,21 +153,35 @@ def _run_scenario(
     eligibility: Eligibility,
     gross: int,
     earned_income_amount: int,
+    extra_income: int,
 ) -> _Scenario:
     itemized = method is CreditMethod.ITEMIZED
     d = inp.deductions
     c = inp.credits
+    # 근로소득이 있어야 받을 수 있는 공제: 특별소득공제, 신용카드 등, 보험료·의료비·교육비·월세 세액공제
+    has_earned = gross > 0
+    # 종합소득금액: 근로소득금액 + 그 밖의 종합소득금액 (결손금은 차감, 0원 하한)
+    comprehensive = max(earned_income_amount + extra_income, 0)
 
     # ---- 소득공제 ----
     personal = personal_deduction(eligibility, rules)
     pension = pension_insurance_deduction(d)
-    housing = housing_deductions(d, eligibility, rules, include_special=itemized)
+    housing = housing_deductions(d, eligibility, rules, include_special=itemized and has_earned)
     social = social_insurance_deduction(d)
-    if not itemized:
+    if not has_earned:
+        housing = HousingDeductions(
+            rent_loan=_excluded(housing.rent_loan, NO_EARNED_EXCLUDED),
+            mortgage=_excluded(housing.mortgage, NO_EARNED_EXCLUDED),
+            subscription=_excluded(housing.subscription, NO_EARNED_EXCLUDED),
+        )
+        social = _excluded(social, NO_EARNED_EXCLUDED)
+    elif not itemized:
         social = _excluded(social)
     special = _group("special", "특별소득공제", (social, housing.rent_loan, housing.mortgage))
     card = card_deduction(d.card, gross, eligibility.eligible_child_count, rules)
-    venture = venture_deduction(d.venture_direct, d.venture_fund, earned_income_amount, rules)
+    if not has_earned:
+        card = _excluded(card, NO_EARNED_EXCLUDED)
+    venture = venture_deduction(d.venture_direct, d.venture_fund, comprehensive, rules)
     growth_fund = national_growth_fund_deduction(d.national_growth_fund, rules)
     other = _group(
         "other", "그 밖의 소득공제", (housing.subscription, card, venture.item, growth_fund)
@@ -143,35 +192,45 @@ def _run_scenario(
     aggregate = aggregate_limit_adjustment(aggregate_targets, venture.fund_amount, rules)
     income_deductions = (personal, pension, special, other, aggregate)
     total_income_deduction = sum(x.amount for x in income_deductions)
-    tax_base = max(earned_income_amount - total_income_deduction, 0)
+    tax_base = max(comprehensive - total_income_deduction, 0)
 
     # ---- 산출세액 ----
     calculated = calculate_tax(tax_base, rules)
 
     # ---- 세액공제 ----
-    donations = donation_credits(c.donations, earned_income_amount, rules)
+    donations = donation_credits(c.donations, comprehensive, rules)
+    earned_only_credits: tuple[BreakdownItem, ...] = (
+        insurance_credit(c.insurance_general, c.insurance_disabled, rules),
+        medical_credit(c.medical, gross, rules),
+        education_credit(c.education, rules),
+    )
+    if not has_earned:
+        earned_only_credits = tuple(_excluded(x, NO_EARNED_EXCLUDED) for x in earned_only_credits)
     special_credit = _group(
-        "special_credit",
-        "특별세액공제",
-        (
-            insurance_credit(c.insurance_general, c.insurance_disabled, rules),
-            medical_credit(c.medical, gross, rules),
-            education_credit(c.education, rules),
-            donations.special,
-        ),
+        "special_credit", "특별세액공제", (*earned_only_credits, donations.special)
     )
     rent = monthly_rent_credit(c.monthly_rent, gross, eligibility.monthly_rent_eligible, rules)
+    if not has_earned:
+        rent = _excluded(rent, NO_EARNED_EXCLUDED)
     credits: list[BreakdownItem] = [
-        earned_income_credit(calculated.amount, gross, rules),
+        _earned_income_credit(
+            calculated.amount, gross, earned_income_amount, comprehensive, extra_income, rules
+        ),
         child_credit(eligibility, rules),
-        pension_account_credit(c.pension_savings, c.irp, gross, rules),
+        pension_account_credit(
+            c.pension_savings,
+            c.irp,
+            gross,
+            rules,
+            comprehensive_income=comprehensive if extra_income else None,
+        ),
         special_credit if itemized else _excluded(special_credit),
         donations.statutory,
         rent if itemized else _excluded(rent),
         marriage_credit(inp.taxpayer.marriage_registered_this_year, rules),
     ]
     if not itemized:
-        credits.append(standard_credit(rules))
+        credits.append(standard_credit(rules, has_earned_income=has_earned))
     tax_credits, total_tax_credit = _cap_credits(credits, calculated.amount)
 
     # 결정세액: 음수 불가, 0원 하한 (세액감면은 미지원 → 0원)
@@ -188,12 +247,13 @@ def _run_scenario(
     )
 
 
-def calculate(inp: SimulationInput, rules: TaxRules) -> TaxResult:
+def calculate(inp: SimulationInput, rules: TaxRules, extra_income: int = 0) -> TaxResult:
+    """extra_income: 근로소득 외 종합소득금액(사업·종합과세 기타소득, 결손이면 음수). 연말정산은 0."""
     if inp.tax_year != rules.tax_year:
         raise RulesYearMismatchError(
             f"입력 귀속연도({inp.tax_year})와 규칙 연도({rules.tax_year})가 다릅니다."
         )
-    eligibility = evaluate(inp, rules)
+    eligibility = evaluate(inp, rules, extra_income)
     warnings: list[CalcWarning] = list(eligibility.warnings)
 
     gross = inp.gross_salary
@@ -201,7 +261,7 @@ def calculate(inp: SimulationInput, rules: TaxRules) -> TaxResult:
     earned_income_amount = gross - eid.amount
 
     scenarios = [
-        _run_scenario(method, inp, rules, eligibility, gross, earned_income_amount)
+        _run_scenario(method, inp, rules, eligibility, gross, earned_income_amount, extra_income)
         for method in (CreditMethod.ITEMIZED, CreditMethod.STANDARD)
     ]
     # 결정세액이 같으면 특별공제 방식(내역이 더 자세함)을 우선한다.

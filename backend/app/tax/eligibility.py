@@ -87,7 +87,8 @@ def _income_requirement_met(dep: Dependent, rules: TaxRules) -> bool:
     return dep.income_amount <= limit
 
 
-def evaluate(inp: SimulationInput, rules: TaxRules) -> Eligibility:
+def evaluate(inp: SimulationInput, rules: TaxRules, extra_income: int = 0) -> Eligibility:
+    """extra_income: 근로소득 외 종합소득금액 (사업·기타소득, 결손이면 음수)."""
     warnings: list[CalcWarning] = []
     year = inp.tax_year
     p = rules.personal
@@ -207,7 +208,8 @@ def evaluate(inp: SimulationInput, rules: TaxRules) -> Eligibility:
         )
 
     # 추가공제: 부녀자·한부모 (소득세법 제51조 제1항 제3호·제4호)
-    earned_income_amount_estimate = _earned_income_amount(gross, rules)
+    # 부녀자공제 소득 요건은 종합소득금액 기준 (제51조 제1항 제3호)
+    earned_income_amount_estimate = max(_earned_income_amount(gross, rules) + extra_income, 0)
     has_basic_dependents = any(x.basic_eligible for x in persons[1:])
     has_basic_children = any(
         x.basic_eligible and x.relation in _CHILD_RELATIONS for x in persons[1:]

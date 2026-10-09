@@ -25,6 +25,7 @@ from app.tax.rules.base import (
     EarnedIncomeCreditRules,
     EarnedIncomeDeductionRules,
     EducationCreditRules,
+    GlobalIncomeRules,
     HousingRules,
     InsuranceCreditRules,
     LimitTier,
@@ -215,6 +216,7 @@ RULES = TaxRules(
         savings_limit=6_000_000,  # 연금저축 600만원
         combined_limit=9_000_000,  # 퇴직연금(IRP) 합산 900만원
         high_rate_gross_salary_limit=55_000_000,  # 총급여 5,500만원 이하 15%
+        high_rate_income_limit=45_000_000,  # 종합소득금액 4,500만원 이하 15% (근로소득 외 소득이 있을 때)
         high_rate=Decimal("0.15"),
         low_rate=Decimal("0.12"),
     ),
@@ -280,8 +282,22 @@ RULES = TaxRules(
     ),
     # 소득세법 제59조의4 제9항 제1호: 근로소득자 표준세액공제 13만원
     standard_credit=130_000,
+    # 소득세법 제59조의4 제9항 제2호: 근로소득이 없는 거주자로서 종합소득이 있는 자 7만원
+    standard_credit_non_earned=70_000,
     # 조특법 제92조: 결혼세액공제 50만원 (2024.1.1. ~ 2026.12.31. 혼인신고, 생애 1회)
     marriage_credit=500_000,
     # 지방세법 제103조의13: 근로소득 연말정산 시 특별징수 지방소득세 = 소득세 결정세액의 10%
     local_income_tax_rate=Decimal("0.10"),
+    global_income=GlobalIncomeRules(
+        # 소득세법 제129조 제1항 제3호: 인적용역 등 사업소득 원천징수 3%
+        business_withholding_rate=Decimal("0.03"),
+        # 소득세법 제129조 제1항 제6호: 기타소득 원천징수 20%
+        other_withholding_rate=Decimal("0.20"),
+        # 소득세법 시행령 제87조: 강연료·원고료 등 필요경비 의제 60%
+        other_deemed_expense_rate=Decimal("0.60"),
+        # 소득세법 제14조 제3항 제8호: 기타소득금액 300만원 이하 분리과세 선택 가능
+        other_separate_threshold=3_000_000,
+        # 소득세법 제129조 제1항 제6호: 분리과세 시 원천징수세율(20%)로 과세 종결
+        other_separate_rate=Decimal("0.20"),
+    ),
 )

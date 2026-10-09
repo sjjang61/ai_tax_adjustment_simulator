@@ -211,6 +211,131 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/global-income/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 종합소득세 계산 (근로 + 사업 + 기타소득, 저장하지 않음) */
+        post: operations["calculate_global_income_api_v1_global_income_calculate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/global-income/simulations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Global Simulations */
+        get: operations["list_global_simulations_api_v1_global_income_simulations_get"];
+        put?: never;
+        /** Create Global Simulation */
+        post: operations["create_global_simulation_api_v1_global_income_simulations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/global-income/simulations/{sim_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Global Simulation */
+        get: operations["get_global_simulation_api_v1_global_income_simulations__sim_id__get"];
+        /** Update Global Simulation */
+        put: operations["update_global_simulation_api_v1_global_income_simulations__sim_id__put"];
+        post?: never;
+        /** Delete Global Simulation */
+        delete: operations["delete_global_simulation_api_v1_global_income_simulations__sim_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/businesses/allocate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 사업장 소득금액을 손익분배비율대로 배분 (저장하지 않음) */
+        post: operations["allocate_business_api_v1_businesses_allocate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/businesses/partnership": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 공동사업자 일괄 종합소득세 계산 (각자의 연말정산 결과 + 지분만큼의 사업소득) */
+        post: operations["calculate_partnership_api_v1_businesses_partnership_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/businesses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Businesses */
+        get: operations["list_businesses_api_v1_businesses_get"];
+        put?: never;
+        /** Create Business */
+        post: operations["create_business_api_v1_businesses_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/businesses/{business_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Business */
+        get: operations["get_business_api_v1_businesses__business_id__get"];
+        /** Update Business */
+        put: operations["update_business_api_v1_businesses__business_id__put"];
+        post?: never;
+        /** Delete Business */
+        delete: operations["delete_business_api_v1_businesses__business_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -271,6 +396,193 @@ export interface components {
              * @default []
              */
             children: components["schemas"]["BreakdownItem"][];
+        };
+        /** BusinessAllocation */
+        BusinessAllocation: {
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Revenue */
+            revenue: number;
+            /** Expenses */
+            expenses: number;
+            /** Income Amount */
+            income_amount: number;
+            /** Withholding Tax */
+            withholding_tax: number;
+            /** Expense Note */
+            expense_note: string;
+            /** Partners */
+            partners: components["schemas"]["PartnerShare"][];
+        };
+        /** BusinessIncome */
+        "BusinessIncome-Input": {
+            /**
+             * Name
+             * @default
+             */
+            name: string;
+            /**
+             * Revenue
+             * @description 총수입금액
+             */
+            revenue: number;
+            /** @default rate */
+            expense_method: components["schemas"]["ExpenseMethod"];
+            /**
+             * Expenses
+             * @description 장부 방식의 필요경비
+             * @default 0
+             */
+            expenses: number;
+            /**
+             * Expense Rate
+             * @description 경비율(%) — 국세청 업종별 경비율 조회
+             * @default 0
+             */
+            expense_rate: number | string;
+            /**
+             * Withholding Tax
+             * @description 원천징수된 소득세. 비우면 총수입금액 × 3%로 추정
+             */
+            withholding_tax?: number | null;
+        };
+        /** BusinessIncome */
+        "BusinessIncome-Output": {
+            /**
+             * Name
+             * @default
+             */
+            name: string;
+            /**
+             * Revenue
+             * @description 총수입금액
+             */
+            revenue: number;
+            /** @default rate */
+            expense_method: components["schemas"]["ExpenseMethod"];
+            /**
+             * Expenses
+             * @description 장부 방식의 필요경비
+             * @default 0
+             */
+            expenses: number;
+            /**
+             * Expense Rate
+             * @description 경비율(%) — 국세청 업종별 경비율 조회
+             * @default 0
+             */
+            expense_rate: string;
+            /**
+             * Withholding Tax
+             * @description 원천징수된 소득세. 비우면 총수입금액 × 3%로 추정
+             */
+            withholding_tax?: number | null;
+        };
+        /** BusinessRead */
+        BusinessRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Partner Count */
+            partner_count: number;
+            /** Income Amount */
+            income_amount: number;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            record: components["schemas"]["BusinessRecord-Output"];
+            allocation: components["schemas"]["BusinessAllocation"];
+        };
+        /**
+         * BusinessRecord
+         * @description 사업자 소득관리 레코드 (사업장 단위).
+         */
+        "BusinessRecord-Input": {
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Revenue */
+            revenue: number;
+            /** @default book */
+            expense_method: components["schemas"]["ExpenseMethod"];
+            /**
+             * Expenses
+             * @default 0
+             */
+            expenses: number;
+            /**
+             * Expense Rate
+             * @default 0
+             */
+            expense_rate: number | string;
+            /**
+             * Withholding Tax
+             * @description 사업장 전체 원천징수세액. 비우면 총수입금액 × 3%로 추정
+             */
+            withholding_tax?: number | null;
+            /** Partners */
+            partners: components["schemas"]["Partner"][];
+        };
+        /**
+         * BusinessRecord
+         * @description 사업자 소득관리 레코드 (사업장 단위).
+         */
+        "BusinessRecord-Output": {
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Revenue */
+            revenue: number;
+            /** @default book */
+            expense_method: components["schemas"]["ExpenseMethod"];
+            /**
+             * Expenses
+             * @default 0
+             */
+            expenses: number;
+            /**
+             * Expense Rate
+             * @default 0
+             */
+            expense_rate: string;
+            /**
+             * Withholding Tax
+             * @description 사업장 전체 원천징수세액. 비우면 총수입금액 × 3%로 추정
+             */
+            withholding_tax?: number | null;
+            /** Partners */
+            partners: components["schemas"]["Partner"][];
+        };
+        /** BusinessSave */
+        BusinessSave: {
+            record: components["schemas"]["BusinessRecord-Input"];
+        };
+        /** BusinessSummary */
+        BusinessSummary: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Partner Count */
+            partner_count: number;
+            /** Income Amount */
+            income_amount: number;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
         };
         /** CalcWarning */
         CalcWarning: {
@@ -608,6 +920,186 @@ export interface components {
                 [key: string]: unknown;
             } | null;
         };
+        /**
+         * ExpenseMethod
+         * @enum {string}
+         */
+        ExpenseMethod: "book" | "rate";
+        /** GlobalIncomeInput */
+        "GlobalIncomeInput-Input": {
+            /** Tax Year */
+            tax_year: number;
+            /** @description 근로소득·인적공제·공제 입력 (근로소득이 없으면 급여 0) */
+            base: components["schemas"]["SimulationInput"];
+            /**
+             * Earned Prepaid Tax
+             * @description 근로소득 기납부세액(연말정산 결정세액). 비우면 연말정산 결정세액으로 계산
+             */
+            earned_prepaid_tax?: number | null;
+            /**
+             * Business Incomes
+             * @default []
+             */
+            business_incomes: components["schemas"]["BusinessIncome-Input"][];
+            /**
+             * Other Incomes
+             * @default []
+             */
+            other_incomes: components["schemas"]["OtherIncome"][];
+            /** @default auto */
+            other_income_taxation: components["schemas"]["OtherIncomeTaxation"];
+            /**
+             * Interim Prepayment
+             * @description 중간예납세액
+             * @default 0
+             */
+            interim_prepayment: number;
+        };
+        /** GlobalIncomeInput */
+        "GlobalIncomeInput-Output": {
+            /** Tax Year */
+            tax_year: number;
+            /** @description 근로소득·인적공제·공제 입력 (근로소득이 없으면 급여 0) */
+            base: components["schemas"]["SimulationInput"];
+            /**
+             * Earned Prepaid Tax
+             * @description 근로소득 기납부세액(연말정산 결정세액). 비우면 연말정산 결정세액으로 계산
+             */
+            earned_prepaid_tax?: number | null;
+            /**
+             * Business Incomes
+             * @default []
+             */
+            business_incomes: components["schemas"]["BusinessIncome-Output"][];
+            /**
+             * Other Incomes
+             * @default []
+             */
+            other_incomes: components["schemas"]["OtherIncome"][];
+            /** @default auto */
+            other_income_taxation: components["schemas"]["OtherIncomeTaxation"];
+            /**
+             * Interim Prepayment
+             * @description 중간예납세액
+             * @default 0
+             */
+            interim_prepayment: number;
+        };
+        /** GlobalIncomeResult */
+        GlobalIncomeResult: {
+            /** Tax Year */
+            tax_year: number;
+            /** Rules Verified */
+            rules_verified: boolean;
+            /** Income Lines */
+            income_lines: components["schemas"]["IncomeLine"][];
+            /** Earned Income Amount */
+            earned_income_amount: number;
+            /** Business Income Amount */
+            business_income_amount: number;
+            /** Other Income Amount */
+            other_income_amount: number;
+            /** Comprehensive Income Amount */
+            comprehensive_income_amount: number;
+            /**
+             * Other Income Taxation
+             * @enum {string}
+             */
+            other_income_taxation: "comprehensive" | "separate" | "none";
+            /** Separate Tax */
+            separate_tax: number;
+            /** Options */
+            options: components["schemas"]["TaxationOption"][];
+            prepaid: components["schemas"]["PrepaidBreakdown"];
+            tax_result: components["schemas"]["TaxResult"];
+            /** Total Balance Due */
+            total_balance_due: number;
+            /** Warnings */
+            warnings: components["schemas"]["CalcWarning"][];
+            /** Disclaimer */
+            disclaimer: string;
+        };
+        /**
+         * GlobalIncomeRules
+         * @description 종합소득세(사업·기타소득) 규칙.
+         */
+        GlobalIncomeRules: {
+            /** Business Withholding Rate */
+            business_withholding_rate: string;
+            /** Other Withholding Rate */
+            other_withholding_rate: string;
+            /** Other Deemed Expense Rate */
+            other_deemed_expense_rate: string;
+            /** Other Separate Threshold */
+            other_separate_threshold: number;
+            /** Other Separate Rate */
+            other_separate_rate: string;
+        };
+        /** GlobalIncomeSimulationCreate */
+        GlobalIncomeSimulationCreate: {
+            /** Name */
+            name: string;
+            input: components["schemas"]["GlobalIncomeInput-Input"];
+            /**
+             * Source Simulation Id
+             * @description 불러온 연말정산 시뮬레이션 id
+             */
+            source_simulation_id?: number | null;
+        };
+        /** GlobalIncomeSimulationRead */
+        GlobalIncomeSimulationRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Total Balance Due */
+            total_balance_due: number;
+            /** Source Simulation Id */
+            source_simulation_id: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            input: components["schemas"]["GlobalIncomeInput-Output"];
+            result: components["schemas"]["GlobalIncomeResult"];
+        };
+        /** GlobalIncomeSimulationSummary */
+        GlobalIncomeSimulationSummary: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Tax Year */
+            tax_year: number;
+            /** Total Balance Due */
+            total_balance_due: number;
+            /** Source Simulation Id */
+            source_simulation_id: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** GlobalIncomeSimulationUpdate */
+        GlobalIncomeSimulationUpdate: {
+            /** Name */
+            name: string;
+            input: components["schemas"]["GlobalIncomeInput-Input"];
+        };
         /** HousingRules */
         HousingRules: {
             /** Subscription Rate */
@@ -697,6 +1189,29 @@ export interface components {
              * @default 0
              */
             national_growth_fund: number;
+        };
+        /** IncomeLine */
+        IncomeLine: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "earned" | "business" | "other";
+            /** Name */
+            name: string;
+            /** Revenue */
+            revenue: number;
+            /** Expenses */
+            expenses: number;
+            /** Income Amount */
+            income_amount: number;
+            /** Withholding Tax */
+            withholding_tax: number;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
         };
         /** InputDiff */
         InputDiff: {
@@ -843,6 +1358,95 @@ export interface components {
             /** Included In Aggregate Limit */
             included_in_aggregate_limit: boolean;
         };
+        /** OtherIncome */
+        OtherIncome: {
+            /**
+             * Name
+             * @default
+             */
+            name: string;
+            /** @default deemed_expense */
+            kind: components["schemas"]["OtherIncomeKind"];
+            /**
+             * Revenue
+             * @description 총수입금액 (지급액)
+             */
+            revenue: number;
+            /**
+             * Expenses
+             * @description 실제 필요경비
+             * @default 0
+             */
+            expenses: number;
+            /**
+             * Withholding Tax
+             * @description 원천징수된 소득세. 비우면 기타소득금액 × 20%로 추정
+             */
+            withholding_tax?: number | null;
+        };
+        /**
+         * OtherIncomeKind
+         * @enum {string}
+         */
+        OtherIncomeKind: "deemed_expense" | "actual";
+        /**
+         * OtherIncomeTaxation
+         * @enum {string}
+         */
+        OtherIncomeTaxation: "auto" | "comprehensive" | "separate";
+        /** Partner */
+        Partner: {
+            /** Name */
+            name: string;
+            /**
+             * Share
+             * @description 손익분배비율 지분 (예: 6:4면 6과 4)
+             */
+            share: number;
+            /**
+             * Simulation Id
+             * @description 이 사업자의 연말정산 시뮬레이션 (근로소득)
+             */
+            simulation_id?: number | null;
+        };
+        /** PartnerResult */
+        PartnerResult: {
+            partner: components["schemas"]["PartnerShare"];
+            /** Simulation Name */
+            simulation_name: string | null;
+            /** Notes */
+            notes: string[];
+            input: components["schemas"]["GlobalIncomeInput-Output"];
+            result: components["schemas"]["GlobalIncomeResult"];
+        };
+        /** PartnerShare */
+        PartnerShare: {
+            /** Name */
+            name: string;
+            /** Share */
+            share: number;
+            /** Ratio */
+            ratio: string;
+            /** Simulation Id */
+            simulation_id: number | null;
+            /** Revenue */
+            revenue: number;
+            /** Expenses */
+            expenses: number;
+            /** Income Amount */
+            income_amount: number;
+            /** Withholding Tax */
+            withholding_tax: number;
+            business_income: components["schemas"]["BusinessIncome-Output"];
+        };
+        /** PartnershipResult */
+        PartnershipResult: {
+            allocation: components["schemas"]["BusinessAllocation"];
+            /** Partners */
+            partners: components["schemas"]["PartnerResult"][];
+            /** Combined Total Balance Due */
+            combined_total_balance_due: number;
+        };
         /** PensionAccountRules */
         PensionAccountRules: {
             /** Savings Limit */
@@ -851,6 +1455,8 @@ export interface components {
             combined_limit: number;
             /** High Rate Gross Salary Limit */
             high_rate_gross_salary_limit: number;
+            /** High Rate Income Limit */
+            high_rate_income_limit: number;
             /** High Rate */
             high_rate: string;
             /** Low Rate */
@@ -903,6 +1509,19 @@ export interface components {
             spouse_total_balance_due: number;
             /** Combined Total Balance Due */
             combined_total_balance_due: number;
+        };
+        /** PrepaidBreakdown */
+        PrepaidBreakdown: {
+            /** Earned Settled */
+            earned_settled: number;
+            /** Business Withholding */
+            business_withholding: number;
+            /** Other Withholding */
+            other_withholding: number;
+            /** Interim Prepayment */
+            interim_prepayment: number;
+            /** Total */
+            total: number;
         };
         /** PrepaidTax */
         PrepaidTax: {
@@ -1387,10 +2006,33 @@ export interface components {
             rent_credit: components["schemas"]["RentCreditRules"];
             /** Standard Credit */
             standard_credit: number;
+            /** Standard Credit Non Earned */
+            standard_credit_non_earned: number;
             /** Marriage Credit */
             marriage_credit: number | null;
             /** Local Income Tax Rate */
             local_income_tax_rate: string;
+            global_income: components["schemas"]["GlobalIncomeRules"];
+        };
+        /** TaxationOption */
+        TaxationOption: {
+            /**
+             * Taxation
+             * @enum {string}
+             */
+            taxation: "comprehensive" | "separate";
+            /** Comprehensive Income Amount */
+            comprehensive_income_amount: number;
+            /** Determined Tax */
+            determined_tax: number;
+            /** Local Income Tax */
+            local_income_tax: number;
+            /** Separate Tax */
+            separate_tax: number;
+            /** Separate Local Tax */
+            separate_local_tax: number;
+            /** Total Burden */
+            total_burden: number;
         };
         /** Taxpayer */
         Taxpayer: {
@@ -2237,6 +2879,657 @@ export interface operations {
             };
             /** @description AI 미설정 */
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    calculate_global_income_api_v1_global_income_calculate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GlobalIncomeInput-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlobalIncomeResult"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_global_simulations_api_v1_global_income_simulations_get: {
+        parameters: {
+            query?: {
+                tax_year?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlobalIncomeSimulationSummary"][];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_global_simulation_api_v1_global_income_simulations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GlobalIncomeSimulationCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlobalIncomeSimulationRead"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_global_simulation_api_v1_global_income_simulations__sim_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sim_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlobalIncomeSimulationRead"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_global_simulation_api_v1_global_income_simulations__sim_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sim_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GlobalIncomeSimulationUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GlobalIncomeSimulationRead"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_global_simulation_api_v1_global_income_simulations__sim_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sim_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    allocate_business_api_v1_businesses_allocate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessRecord-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessAllocation"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    calculate_partnership_api_v1_businesses_partnership_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessRecord-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnershipResult"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_businesses_api_v1_businesses_get: {
+        parameters: {
+            query?: {
+                tax_year?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessSummary"][];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_business_api_v1_businesses_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessSave"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessRead"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_business_api_v1_businesses__business_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                business_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessRead"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_business_api_v1_businesses__business_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                business_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessSave"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessRead"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_business_api_v1_businesses__business_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                business_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 리소스 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 입력 검증 실패 */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };

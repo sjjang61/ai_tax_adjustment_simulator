@@ -1,0 +1,23 @@
+{
+  "name": "근로소득 없음, 사업소득만 (수입 4,000만원, 경비율 30%, 원천징수 3% 추정)",
+  "source": "수기 계산(작성자 검산) — 소득세법 제19·50·55조, 제59조의4 제9항 제2호(표준세액공제 7만원), 제129조 제1항 제3호(원천징수 3%). 사업소득금액 28,000,000 − 기본공제 1,500,000 = 과세표준 26,500,000 → 산출세액 26,500,000×15%−1,260,000 = 2,715,000 − 표준세액공제 70,000 = 결정세액 2,645,000 − 기납부 1,200,000 = 1,445,000, 지방소득세 264,500 − 120,000 = 144,500. TODO(verify): 국세청 종합소득세 신고 사례로 교차 검증 필요",
+  "input": {
+    "tax_year": 2025,
+    "base": {
+      "tax_year": 2025,
+      "income": {"annual_earned_income": 0},
+      "taxpayer": {"birth_year": 1990}
+    },
+    "business_incomes": [
+      {"name": "프리랜서 개발", "revenue": 40000000, "expense_method": "rate", "expense_rate": "30"}
+    ]
+  },
+  "expected": {
+    "business_income_amount": 28000000,
+    "comprehensive_income_amount": 28000000,
+    "other_income_taxation": "none",
+    "total_balance_due": 1589500,
+    "tax_result": {"tax_base": 26500000, "calculated_tax": 2715000, "determined_tax": 2645000, "balance_due": 1445000},
+    "prepaid": {"earned_settled": 0, "business_withholding": 1200000, "other_withholding": 0, "interim_prepayment": 0, "total": 1200000}
+  }
+}

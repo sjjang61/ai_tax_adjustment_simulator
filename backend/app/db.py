@@ -8,7 +8,7 @@ from collections.abc import Iterator
 from typing import Any
 
 from fastapi import Request
-from sqlalchemy import URL, Engine, create_engine
+from sqlalchemy import URL, Engine, create_engine, event
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -27,18 +27,31 @@ def engine_options(url: URL) -> dict[str, Any]:
     return {"pool_pre_ping": True}
 
 
+def _enable_sqlite_foreign_keys(engine: Engine) -> None:
+    """SQLite는 기본적으로 외래키(ON DELETE SET NULL 등)를 강제하지 않으므로 연결마다 켠다."""
+
+    @event.listens_for(engine, "connect")
+    def _on_connect(dbapi_connection: Any, _record: Any) -> None:
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
+
 def build_engine(settings: Settings) -> Engine:
     if settings.app_env == "test":
         # 테스트: 인메모리 SQLite, 모든 연결이 같은 DB를 공유하도록 StaticPool 사용
-        return create_engine(
+        engine = create_engine(
             "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
         )
+        _enable_sqlite_foreign_keys(engine)
+        return engine
     url = settings.database_url
     return create_engine(url, **engine_options(url))
 
 
 def init_db(engine: Engine) -> None:
-    import app.models.simulation  # noqa: F401 - 메타데이터 등록
+    import app.models.global_income
+    import app.models.simulation  # noqa: F401
 
     Base.metadata.create_all(engine)
 

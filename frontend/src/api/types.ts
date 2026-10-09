@@ -38,3 +38,24 @@ export type ComparisonResult = Schemas['ComparisonResult'];
 export type MetricDiff = Schemas['MetricDiff'];
 export type ItemDiff = Schemas['ItemDiff'];
 export type InputDiff = Schemas['InputDiff'];
+/** 요청용 (경비율은 숫자 또는 문자열) */
+export type GlobalIncomeInput = Schemas['GlobalIncomeInput-Input'];
+/** 저장된 입력(응답) — 경비율은 문자열 */
+export type StoredGlobalIncomeInput = Schemas['GlobalIncomeInput-Output'];
+export type GlobalIncomeResult = Schemas['GlobalIncomeResult'];
+export type BusinessIncome = Schemas['BusinessIncome-Input'];
+export type OtherIncome = Schemas['OtherIncome'];
+export type IncomeLine = Schemas['IncomeLine'];
+export type TaxationOption = Schemas['TaxationOption'];
+export type GlobalIncomeSimulationRead = Schemas['GlobalIncomeSimulationRead'];
+export type GlobalIncomeSimulationSummary = Schemas['GlobalIncomeSimulationSummary'];
+/** 사업자 소득관리 — 요청용 레코드 (경비율 숫자 또는 문자열) */
+export type BusinessRecord = Schemas['BusinessRecord-Input'];
+export type StoredBusinessRecord = Schemas['BusinessRecord-Output'];
+export type Partner = Schemas['Partner'];
+export type PartnerShare = Schemas['PartnerShare'];
+export type BusinessAllocation = Schemas['BusinessAllocation'];
+export type BusinessRead = Schemas['BusinessRead'];
+export type BusinessSummary = Schemas['BusinessSummary'];
+export type PartnershipResult = Schemas['PartnershipResult'];
+export type PartnerResult = Schemas['PartnerResult'];

@@ -99,3 +99,28 @@ def test_more_national_growth_fund_never_raises_tax_2026(gross: int, base: int, 
         return calculate(inp, rules).determined_tax
 
     assert determined(base + inc) <= determined(base)
+
+
+@settings(max_examples=80, deadline=None)
+@given(
+    gross=st.integers(min_value=0, max_value=200_000_000),
+    revenue=st.integers(min_value=0, max_value=300_000_000),
+    expenses=st.integers(min_value=0, max_value=300_000_000),
+    inc=delta,
+)
+def test_global_income_monotonic(gross: int, revenue: int, expenses: int, inc: int) -> None:
+    """사업 수입이 늘면 결정세액이 줄지 않고, 필요경비가 늘면 결정세액이 늘지 않는다."""
+    from app.tax.global_income import GlobalIncomeInput, calculate_global
+
+    def determined(rev: int, exp: int) -> int:
+        inp = GlobalIncomeInput.model_validate(
+            {
+                "tax_year": 2025,
+                "base": make_input(income={"annual_earned_income": gross}).model_dump(mode="json"),
+                "business_incomes": [{"revenue": rev, "expense_method": "book", "expenses": exp}],
+            }
+        )
+        return calculate_global(inp, RULES).tax_result.determined_tax
+
+    assert determined(revenue + inc, expenses) >= determined(revenue, expenses)
+    assert determined(revenue, expenses + inc) <= determined(revenue, expenses)

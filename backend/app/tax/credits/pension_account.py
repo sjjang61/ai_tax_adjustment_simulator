@@ -6,12 +6,21 @@ from app.tax.rules.base import TaxRules
 
 
 def pension_account_credit(
-    pension_savings: int, irp: int, gross_salary: int, rules: TaxRules
+    pension_savings: int,
+    irp: int,
+    gross_salary: int,
+    rules: TaxRules,
+    comprehensive_income: int | None = None,
 ) -> BreakdownItem:
+    """공제율 기준: 근로소득만 있으면 총급여, 다른 종합소득이 있으면 종합소득금액 (제59조의3 제1항)."""
     r = rules.pension_account
     savings_eligible = min(pension_savings, r.savings_limit)
     total_eligible = min(savings_eligible + irp, r.combined_limit)
-    rate = r.high_rate if gross_salary <= r.high_rate_gross_salary_limit else r.low_rate
+    if comprehensive_income is None:
+        high = gross_salary <= r.high_rate_gross_salary_limit
+    else:
+        high = comprehensive_income <= r.high_rate_income_limit
+    rate = r.high_rate if high else r.low_rate
     amount = apply_rate(total_eligible, rate)
     paid = pension_savings + irp
     return BreakdownItem(

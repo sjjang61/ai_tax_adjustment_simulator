@@ -6,7 +6,15 @@ from contextlib import asynccontextmanager
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import couples, import_export, recommendations, rules, simulations
+from app.api.v1 import (
+    businesses,
+    couples,
+    global_income,
+    import_export,
+    recommendations,
+    rules,
+    simulations,
+)
 from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
 from app.db import build_engine, build_session_factory, init_db
@@ -55,6 +63,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     api.include_router(rules.router)
     api.include_router(recommendations.router)
     api.include_router(couples.router)
+    api.include_router(global_income.router)
+    api.include_router(businesses.router)
     app.include_router(api)
 
     @app.get("/health", tags=["health"])

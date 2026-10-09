@@ -1,8 +1,17 @@
 import type {
+  BusinessAllocation,
+  BusinessRead,
+  BusinessRecord,
+  BusinessSummary,
+  PartnershipResult,
   CoupleInput,
   CoupleOptimizationResult,
   CoupleRecommendationResponse,
   ErrorResponse,
+  GlobalIncomeInput,
+  GlobalIncomeResult,
+  GlobalIncomeSimulationRead,
+  GlobalIncomeSimulationSummary,
   RecommendationResponse,
   RulesYears,
   SimulationComparison,
@@ -111,6 +120,38 @@ export const api = {
       method: 'POST',
       ...json(input),
     }),
+  calculateGlobal: (input: GlobalIncomeInput) =>
+    request<GlobalIncomeResult>('/global-income/calculate', { method: 'POST', ...json(input) }),
+  listGlobalSimulations: (taxYear?: number) =>
+    request<GlobalIncomeSimulationSummary[]>(
+      `/global-income/simulations${query({ tax_year: taxYear })}`,
+    ),
+  getGlobalSimulation: (id: number) =>
+    request<GlobalIncomeSimulationRead>(`/global-income/simulations/${id}`),
+  createGlobalSimulation: (name: string, input: GlobalIncomeInput, sourceSimulationId?: number) =>
+    request<GlobalIncomeSimulationRead>('/global-income/simulations', {
+      method: 'POST',
+      ...json({ name, input, source_simulation_id: sourceSimulationId ?? null }),
+    }),
+  updateGlobalSimulation: (id: number, name: string, input: GlobalIncomeInput) =>
+    request<GlobalIncomeSimulationRead>(`/global-income/simulations/${id}`, {
+      method: 'PUT',
+      ...json({ name, input }),
+    }),
+  deleteGlobalSimulation: (id: number) =>
+    request<undefined>(`/global-income/simulations/${id}`, { method: 'DELETE' }),
+  allocateBusiness: (record: BusinessRecord) =>
+    request<BusinessAllocation>('/businesses/allocate', { method: 'POST', ...json(record) }),
+  calculatePartnership: (record: BusinessRecord) =>
+    request<PartnershipResult>('/businesses/partnership', { method: 'POST', ...json(record) }),
+  listBusinesses: (taxYear?: number) =>
+    request<BusinessSummary[]>(`/businesses${query({ tax_year: taxYear })}`),
+  getBusiness: (id: number) => request<BusinessRead>(`/businesses/${id}`),
+  createBusiness: (record: BusinessRecord) =>
+    request<BusinessRead>('/businesses', { method: 'POST', ...json({ record }) }),
+  updateBusiness: (id: number, record: BusinessRecord) =>
+    request<BusinessRead>(`/businesses/${id}`, { method: 'PUT', ...json({ record }) }),
+  deleteBusiness: (id: number) => request<undefined>(`/businesses/${id}`, { method: 'DELETE' }),
   getRuleYears: () => request<RulesYears>('/rules'),
   getRules: (taxYear: number) => request<TaxRules>(`/rules/${taxYear}`),
 };

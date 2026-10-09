@@ -143,6 +143,7 @@ class PensionAccountRules(_Frozen):
     savings_limit: int
     combined_limit: int
     high_rate_gross_salary_limit: int
+    high_rate_income_limit: int  # 근로소득 외 종합소득이 있으면 종합소득금액 기준
     high_rate: Decimal
     low_rate: Decimal
 
@@ -195,6 +196,16 @@ class RentCreditRules(_Frozen):
     payment_limit: int
 
 
+class GlobalIncomeRules(_Frozen):
+    """종합소득세(사업·기타소득) 규칙."""
+
+    business_withholding_rate: Decimal  # 사업소득(인적용역) 원천징수세율
+    other_withholding_rate: Decimal  # 기타소득 원천징수세율
+    other_deemed_expense_rate: Decimal  # 기타소득 필요경비 의제율 (강연료·원고료 등)
+    other_separate_threshold: int  # 기타소득금액 이 금액 이하면 분리과세 선택 가능
+    other_separate_rate: Decimal  # 분리과세 기타소득 세율
+
+
 class TaxRules(_Frozen):
     """한 귀속연도의 근로소득 연말정산 규칙 묶음."""
 
@@ -218,5 +229,7 @@ class TaxRules(_Frozen):
     donation_credit: DonationCreditRules
     rent_credit: RentCreditRules
     standard_credit: int
+    standard_credit_non_earned: int  # 근로소득이 없는 종합소득자 표준세액공제
     marriage_credit: int | None
     local_income_tax_rate: Decimal
+    global_income: GlobalIncomeRules
