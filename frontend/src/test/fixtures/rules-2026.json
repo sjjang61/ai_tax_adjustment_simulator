@@ -1,0 +1,291 @@
+{
+  "tax_year": 2026,
+  "verified": false,
+  "notes": [
+    "2026년 귀속 규칙은 공식 자료로 검증되지 않았습니다. TODO(verify)",
+    "신용카드 등 사용액 증가분(전년 대비 5% 초과분) 추가 공제는 지원하지 않습니다. TODO(verify): 2025년 귀속 적용 여부·공제율(10%/20%)·비교 기간 공식 확인 필요",
+    "고액 기부금 3천만원 초과분 40% 한시 공제율(2024년 기부분)은 2025년에 적용하지 않았습니다. TODO(verify): 2025년 기부분 연장 여부 확인 필요",
+    "세액감면(중소기업 취업자 감면 등), 우리사주조합·장기집합투자증권저축·노란우산공제 소득공제는 지원하지 않습니다."
+  ],
+  "earned_income_deduction": {
+    "brackets": [
+      {
+        "lower": 0,
+        "upper": 5000000,
+        "base_amount": 0,
+        "rate": "0.70"
+      },
+      {
+        "lower": 5000000,
+        "upper": 15000000,
+        "base_amount": 3500000,
+        "rate": "0.40"
+      },
+      {
+        "lower": 15000000,
+        "upper": 45000000,
+        "base_amount": 7500000,
+        "rate": "0.15"
+      },
+      {
+        "lower": 45000000,
+        "upper": 100000000,
+        "base_amount": 12000000,
+        "rate": "0.05"
+      },
+      {
+        "lower": 100000000,
+        "upper": null,
+        "base_amount": 14750000,
+        "rate": "0.02"
+      }
+    ],
+    "max_deduction": 20000000
+  },
+  "personal": {
+    "basic_per_person": 1500000,
+    "elderly_additional": 1000000,
+    "elderly_min_age": 70,
+    "disabled_additional": 2000000,
+    "female_additional": 500000,
+    "female_earned_income_limit": 30000000,
+    "single_parent_additional": 1000000,
+    "dependent_income_limit": 1000000,
+    "dependent_salary_only_limit": 5000000,
+    "ascendant_min_age": 60,
+    "descendant_max_age": 20,
+    "sibling_max_age": 20,
+    "sibling_min_age": 60
+  },
+  "housing": {
+    "subscription_rate": "0.40",
+    "subscription_payment_limit": 3000000,
+    "subscription_gross_salary_limit": 70000000,
+    "rent_loan_rate": "0.40",
+    "rent_loan_and_subscription_limit": 4000000,
+    "mortgage_limits": {
+      "fixed_and_non_deferred_15y": 20000000,
+      "fixed_or_non_deferred_15y": 18000000,
+      "other_15y": 8000000,
+      "fixed_or_non_deferred_10y": 6000000
+    }
+  },
+  "card": {
+    "minimum_usage_rate": "0.25",
+    "credit_rate": "0.15",
+    "debit_cash_rate": "0.30",
+    "culture_rate": "0.30",
+    "sports_facility_rate": "0.30",
+    "traditional_market_rate": "0.40",
+    "public_transport_rate": "0.40",
+    "culture_gross_salary_limit": 70000000,
+    "limit_salary_threshold": 70000000,
+    "basic_limit_low_income": 3000000,
+    "basic_limit_high_income": 2500000,
+    "additional_limit_low_income": 3000000,
+    "additional_limit_high_income": 2000000,
+    "child_basic_limit_per_child_low_income": 500000,
+    "child_basic_limit_per_child_high_income": 250000,
+    "child_basic_limit_max_low_income": 1000000,
+    "child_basic_limit_max_high_income": 500000
+  },
+  "venture": {
+    "direct_tiers": [
+      {
+        "upper": 30000000,
+        "rate": "1.00"
+      },
+      {
+        "upper": 50000000,
+        "rate": "0.70"
+      },
+      {
+        "upper": null,
+        "rate": "0.30"
+      }
+    ],
+    "fund_rate": "0.10",
+    "income_limit_rate": "0.50"
+  },
+  "national_growth_fund": {
+    "tiers": [
+      {
+        "upper": 30000000,
+        "rate": "0.40"
+      },
+      {
+        "upper": 50000000,
+        "rate": "0.20"
+      },
+      {
+        "upper": 70000000,
+        "rate": "0.10"
+      },
+      {
+        "upper": null,
+        "rate": "0"
+      }
+    ],
+    "max_deduction": 18000000,
+    "min_holding_years": 3,
+    "included_in_aggregate_limit": true
+  },
+  "aggregate_deduction_limit": 25000000,
+  "tax_rate_brackets": [
+    {
+      "upper": 14000000,
+      "rate": "0.06",
+      "progressive_deduction": 0
+    },
+    {
+      "upper": 50000000,
+      "rate": "0.15",
+      "progressive_deduction": 1260000
+    },
+    {
+      "upper": 88000000,
+      "rate": "0.24",
+      "progressive_deduction": 5760000
+    },
+    {
+      "upper": 150000000,
+      "rate": "0.35",
+      "progressive_deduction": 15440000
+    },
+    {
+      "upper": 300000000,
+      "rate": "0.38",
+      "progressive_deduction": 19940000
+    },
+    {
+      "upper": 500000000,
+      "rate": "0.40",
+      "progressive_deduction": 25940000
+    },
+    {
+      "upper": 1000000000,
+      "rate": "0.42",
+      "progressive_deduction": 35940000
+    },
+    {
+      "upper": null,
+      "rate": "0.45",
+      "progressive_deduction": 65940000
+    }
+  ],
+  "earned_income_credit": {
+    "tax_threshold": 1300000,
+    "low_rate": "0.55",
+    "high_rate": "0.30",
+    "limit_tiers": [
+      {
+        "lower": 0,
+        "upper": 33000000,
+        "base": 740000,
+        "reduction_rate": "0",
+        "floor": 740000
+      },
+      {
+        "lower": 33000000,
+        "upper": 70000000,
+        "base": 740000,
+        "reduction_rate": "0.008",
+        "floor": 660000
+      },
+      {
+        "lower": 70000000,
+        "upper": 120000000,
+        "base": 660000,
+        "reduction_rate": "0.5",
+        "floor": 500000
+      },
+      {
+        "lower": 120000000,
+        "upper": null,
+        "base": 500000,
+        "reduction_rate": "0.5",
+        "floor": 200000
+      }
+    ]
+  },
+  "child_credit": {
+    "min_age": 8,
+    "first_child": 250000,
+    "second_child": 300000,
+    "third_plus_child": 400000,
+    "birth_first": 300000,
+    "birth_second": 500000,
+    "birth_third_plus": 700000
+  },
+  "pension_account": {
+    "savings_limit": 6000000,
+    "combined_limit": 9000000,
+    "high_rate_gross_salary_limit": 55000000,
+    "high_rate": "0.15",
+    "low_rate": "0.12"
+  },
+  "insurance_credit": {
+    "general_limit": 1000000,
+    "general_rate": "0.12",
+    "disabled_limit": 1000000,
+    "disabled_rate": "0.15"
+  },
+  "medical_credit": {
+    "threshold_rate": "0.03",
+    "general_limit": 7000000,
+    "general_rate": "0.15",
+    "specific_rate": "0.15",
+    "premature_rate": "0.20",
+    "infertility_rate": "0.30",
+    "specific_min_age": 65,
+    "specific_max_age_at_start": 6
+  },
+  "education_credit": {
+    "rate": "0.15",
+    "preschool_limit": 3000000,
+    "school_limit": 3000000,
+    "university_limit": 9000000
+  },
+  "donation_credit": {
+    "political_full_credit_limit": 100000,
+    "political_full_credit_ratio": "0.9090909090909090909090909091",
+    "political_tiers": [
+      {
+        "upper": 30000000,
+        "rate": "0.15"
+      },
+      {
+        "upper": null,
+        "rate": "0.25"
+      }
+    ],
+    "hometown_full_credit_limit": 100000,
+    "hometown_full_credit_ratio": "0.9090909090909090909090909091",
+    "hometown_rate": "0.15",
+    "hometown_disaster_rate": "0.30",
+    "hometown_annual_limit": 20000000,
+    "general_tiers": [
+      {
+        "upper": 10000000,
+        "rate": "0.15"
+      },
+      {
+        "upper": null,
+        "rate": "0.30"
+      }
+    ],
+    "general_limit_rate": "0.30",
+    "religious_limit_rate": "0.10",
+    "religious_extra_limit_rate": "0.20"
+  },
+  "rent_credit": {
+    "gross_salary_limit": 80000000,
+    "high_rate_gross_salary_limit": 55000000,
+    "high_rate": "0.17",
+    "low_rate": "0.15",
+    "payment_limit": 10000000
+  },
+  "standard_credit": 130000,
+  "marriage_credit": 500000,
+  "local_income_tax_rate": "0.10"
+}

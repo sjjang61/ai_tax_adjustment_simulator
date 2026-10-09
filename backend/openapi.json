@@ -1,0 +1,3776 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "연말정산 시뮬레이터 API",
+    "description": "근로소득 연말정산 예상 결정세액·환급액 계산 (참고용 시뮬레이션)",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/simulations/{simulation_id}/export": {
+      "get": {
+        "tags": [
+          "import-export"
+        ],
+        "summary": "시뮬레이션을 JSON 파일로 내보내기",
+        "operationId": "export_simulation_api_v1_simulations__simulation_id__export_get",
+        "parameters": [
+          {
+            "name": "simulation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Simulation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationExport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/simulations/import": {
+      "post": {
+        "tags": [
+          "import-export"
+        ],
+        "summary": "JSON 파일 가져오기 (target_year 지정 시 연도 이월 변환)",
+        "operationId": "import_simulation_api_v1_simulations_import_post",
+        "parameters": [
+          {
+            "name": "target_year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 2100,
+                  "minimum": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Year"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationExport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationWithWarnings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/simulations/calculate": {
+      "post": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "저장 없이 계산 (실시간 미리보기)",
+        "operationId": "calculate_simulation_api_v1_simulations_calculate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaxResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/simulations": {
+      "post": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "Create Simulation",
+        "operationId": "create_simulation_api_v1_simulations_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "List Simulations",
+        "operationId": "list_simulations_api_v1_simulations_get",
+        "parameters": [
+          {
+            "name": "tax_year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tax Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimulationSummary"
+                  },
+                  "title": "Response List Simulations Api V1 Simulations Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/simulations/{simulation_id}": {
+      "get": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "Get Simulation",
+        "operationId": "get_simulation_api_v1_simulations__simulation_id__get",
+        "parameters": [
+          {
+            "name": "simulation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Simulation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "Update Simulation",
+        "operationId": "update_simulation_api_v1_simulations__simulation_id__put",
+        "parameters": [
+          {
+            "name": "simulation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Simulation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "Delete Simulation",
+        "operationId": "delete_simulation_api_v1_simulations__simulation_id__delete",
+        "parameters": [
+          {
+            "name": "simulation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Simulation Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/simulations/{simulation_id}/compare": {
+      "post": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "저장본(기준)과 변경안 비교 (저장하지 않음)",
+        "operationId": "compare_simulation_api_v1_simulations__simulation_id__compare_post",
+        "parameters": [
+          {
+            "name": "simulation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Simulation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationComparison"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/simulations/{simulation_id}/carry-over": {
+      "post": {
+        "tags": [
+          "simulations"
+        ],
+        "summary": "전년도 시뮬레이션으로 올해 초안 생성",
+        "operationId": "carry_over_simulation_api_v1_simulations__simulation_id__carry_over_post",
+        "parameters": [
+          {
+            "name": "simulation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Simulation Id"
+            }
+          },
+          {
+            "name": "target_year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 2100,
+              "minimum": 2000,
+              "title": "Target Year"
+            }
+          },
+          {
+            "name": "salary_increase_rate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "maximum": 100.0,
+                  "minimum": -50.0
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "급여 인상률(%)",
+              "title": "Salary Increase Rate"
+            },
+            "description": "급여 인상률(%)"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationWithWarnings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rules": {
+      "get": {
+        "tags": [
+          "rules"
+        ],
+        "summary": "지원 귀속연도 목록",
+        "operationId": "list_rule_years_api_v1_rules_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RulesYears"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rules/{tax_year}": {
+      "get": {
+        "tags": [
+          "rules"
+        ],
+        "summary": "귀속연도별 한도·공제율 메타데이터",
+        "operationId": "read_rules_api_v1_rules__tax_year__get",
+        "parameters": [
+          {
+            "name": "tax_year",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Tax Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaxRules"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recommendations": {
+      "post": {
+        "tags": [
+          "recommendations"
+        ],
+        "summary": "AI 추천: 추가로 받을 수 있는 공제 항목 (절세액은 계산 엔진이 산출)",
+        "operationId": "create_recommendations_api_v1_recommendations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "AI 응답 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "AI 미설정",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/couples/optimize": {
+      "post": {
+        "tags": [
+          "couples"
+        ],
+        "summary": "맞벌이 부부: 부양가족·의료비·교육비 최적 배분 (모든 조합을 계산 엔진으로 계산)",
+        "operationId": "optimize_couple_api_v1_couples_optimize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoupleInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoupleOptimizationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/couples/recommendations": {
+      "post": {
+        "tags": [
+          "couples"
+        ],
+        "summary": "맞벌이 부부: 최적 배분에 대한 AI 설명과 추가 팁",
+        "operationId": "recommend_couple_allocation_api_v1_couples_recommendations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoupleInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoupleRecommendationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "리소스 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "입력 검증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "AI 응답 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "AI 미설정",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppliedUnit": {
+        "type": "string",
+        "enum": [
+          "won",
+          "count"
+        ],
+        "title": "AppliedUnit"
+      },
+      "BreakdownItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "applied_amount": {
+            "type": "integer",
+            "title": "Applied Amount"
+          },
+          "applied_unit": {
+            "$ref": "#/components/schemas/AppliedUnit",
+            "default": "won"
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          },
+          "limited": {
+            "type": "boolean",
+            "title": "Limited",
+            "default": false
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/BreakdownItem"
+            },
+            "type": "array",
+            "title": "Children",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "applied_amount",
+          "amount"
+        ],
+        "title": "BreakdownItem",
+        "description": "공제·세액공제 항목 하나의 계산 내역.\n\n- applied_amount: 공제 적용 대상 금액(입력 사용액·납입액 등) 또는 인원·건수 (applied_unit)\n- amount: 최종 공제액 (소득공제액 또는 세액공제액, 원)\n- limited: 한도·요건으로 공제액이 줄었는지 여부"
+      },
+      "CalcWarning": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "level": {
+            "$ref": "#/components/schemas/WarningLevel",
+            "default": "warning"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "CalcWarning"
+      },
+      "CardRules": {
+        "properties": {
+          "minimum_usage_rate": {
+            "type": "string",
+            "title": "Minimum Usage Rate"
+          },
+          "credit_rate": {
+            "type": "string",
+            "title": "Credit Rate"
+          },
+          "debit_cash_rate": {
+            "type": "string",
+            "title": "Debit Cash Rate"
+          },
+          "culture_rate": {
+            "type": "string",
+            "title": "Culture Rate"
+          },
+          "sports_facility_rate": {
+            "type": "string",
+            "title": "Sports Facility Rate"
+          },
+          "traditional_market_rate": {
+            "type": "string",
+            "title": "Traditional Market Rate"
+          },
+          "public_transport_rate": {
+            "type": "string",
+            "title": "Public Transport Rate"
+          },
+          "culture_gross_salary_limit": {
+            "type": "integer",
+            "title": "Culture Gross Salary Limit"
+          },
+          "limit_salary_threshold": {
+            "type": "integer",
+            "title": "Limit Salary Threshold"
+          },
+          "basic_limit_low_income": {
+            "type": "integer",
+            "title": "Basic Limit Low Income"
+          },
+          "basic_limit_high_income": {
+            "type": "integer",
+            "title": "Basic Limit High Income"
+          },
+          "additional_limit_low_income": {
+            "type": "integer",
+            "title": "Additional Limit Low Income"
+          },
+          "additional_limit_high_income": {
+            "type": "integer",
+            "title": "Additional Limit High Income"
+          },
+          "child_basic_limit_per_child_low_income": {
+            "type": "integer",
+            "title": "Child Basic Limit Per Child Low Income"
+          },
+          "child_basic_limit_per_child_high_income": {
+            "type": "integer",
+            "title": "Child Basic Limit Per Child High Income"
+          },
+          "child_basic_limit_max_low_income": {
+            "type": "integer",
+            "title": "Child Basic Limit Max Low Income"
+          },
+          "child_basic_limit_max_high_income": {
+            "type": "integer",
+            "title": "Child Basic Limit Max High Income"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "minimum_usage_rate",
+          "credit_rate",
+          "debit_cash_rate",
+          "culture_rate",
+          "sports_facility_rate",
+          "traditional_market_rate",
+          "public_transport_rate",
+          "culture_gross_salary_limit",
+          "limit_salary_threshold",
+          "basic_limit_low_income",
+          "basic_limit_high_income",
+          "additional_limit_low_income",
+          "additional_limit_high_income",
+          "child_basic_limit_per_child_low_income",
+          "child_basic_limit_per_child_high_income",
+          "child_basic_limit_max_low_income",
+          "child_basic_limit_max_high_income"
+        ],
+        "title": "CardRules"
+      },
+      "CardUsage": {
+        "properties": {
+          "credit": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Credit",
+            "default": 0
+          },
+          "debit_cash": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Debit Cash",
+            "default": 0
+          },
+          "culture": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Culture",
+            "default": 0
+          },
+          "sports_facility": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Sports Facility",
+            "default": 0
+          },
+          "traditional_market": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Traditional Market",
+            "default": 0
+          },
+          "public_transport": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Public Transport",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CardUsage"
+      },
+      "ChildCreditRules": {
+        "properties": {
+          "min_age": {
+            "type": "integer",
+            "title": "Min Age"
+          },
+          "first_child": {
+            "type": "integer",
+            "title": "First Child"
+          },
+          "second_child": {
+            "type": "integer",
+            "title": "Second Child"
+          },
+          "third_plus_child": {
+            "type": "integer",
+            "title": "Third Plus Child"
+          },
+          "birth_first": {
+            "type": "integer",
+            "title": "Birth First"
+          },
+          "birth_second": {
+            "type": "integer",
+            "title": "Birth Second"
+          },
+          "birth_third_plus": {
+            "type": "integer",
+            "title": "Birth Third Plus"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "min_age",
+          "first_child",
+          "second_child",
+          "third_plus_child",
+          "birth_first",
+          "birth_second",
+          "birth_third_plus"
+        ],
+        "title": "ChildCreditRules"
+      },
+      "ComparisonResult": {
+        "properties": {
+          "before": {
+            "$ref": "#/components/schemas/TaxResult"
+          },
+          "after": {
+            "$ref": "#/components/schemas/TaxResult"
+          },
+          "saving": {
+            "type": "integer",
+            "title": "Saving"
+          },
+          "tax_year_changed": {
+            "type": "boolean",
+            "title": "Tax Year Changed"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricDiff"
+            },
+            "type": "array",
+            "title": "Metrics"
+          },
+          "income_deduction_diffs": {
+            "items": {
+              "$ref": "#/components/schemas/ItemDiff"
+            },
+            "type": "array",
+            "title": "Income Deduction Diffs"
+          },
+          "tax_credit_diffs": {
+            "items": {
+              "$ref": "#/components/schemas/ItemDiff"
+            },
+            "type": "array",
+            "title": "Tax Credit Diffs"
+          },
+          "input_diffs": {
+            "items": {
+              "$ref": "#/components/schemas/InputDiff"
+            },
+            "type": "array",
+            "title": "Input Diffs"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "before",
+          "after",
+          "saving",
+          "tax_year_changed",
+          "metrics",
+          "income_deduction_diffs",
+          "tax_credit_diffs",
+          "input_diffs"
+        ],
+        "title": "ComparisonResult"
+      },
+      "CoupleDependentReason": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "recommended_to": {
+            "$ref": "#/components/schemas/Spouse"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "index",
+          "name",
+          "recommended_to",
+          "reason"
+        ],
+        "title": "CoupleDependentReason"
+      },
+      "CoupleInput": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Tax Year"
+          },
+          "primary": {
+            "$ref": "#/components/schemas/SimulationInput"
+          },
+          "spouse": {
+            "$ref": "#/components/schemas/SimulationInput"
+          },
+          "shared_dependents": {
+            "items": {
+              "$ref": "#/components/schemas/SharedDependent"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Shared Dependents",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "primary",
+          "spouse"
+        ],
+        "title": "CoupleInput"
+      },
+      "CoupleOptimizationResult": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "baseline": {
+            "$ref": "#/components/schemas/PlanSummary"
+          },
+          "best": {
+            "$ref": "#/components/schemas/PlanSummary"
+          },
+          "saving": {
+            "type": "integer",
+            "title": "Saving",
+            "description": "현재 배분 대비 최적 배분의 부부 합산 절세액 (지방소득세 포함)"
+          },
+          "alternatives": {
+            "items": {
+              "$ref": "#/components/schemas/PlanSummary"
+            },
+            "type": "array",
+            "title": "Alternatives"
+          },
+          "evaluated_count": {
+            "type": "integer",
+            "title": "Evaluated Count"
+          },
+          "best_primary_input": {
+            "$ref": "#/components/schemas/SimulationInput"
+          },
+          "best_spouse_input": {
+            "$ref": "#/components/schemas/SimulationInput"
+          },
+          "best_primary_result": {
+            "$ref": "#/components/schemas/TaxResult"
+          },
+          "best_spouse_result": {
+            "$ref": "#/components/schemas/TaxResult"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "baseline",
+          "best",
+          "saving",
+          "alternatives",
+          "evaluated_count",
+          "best_primary_input",
+          "best_spouse_input",
+          "best_primary_result",
+          "best_spouse_result"
+        ],
+        "title": "CoupleOptimizationResult"
+      },
+      "CoupleRecommendationResponse": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "dependent_reasons": {
+            "items": {
+              "$ref": "#/components/schemas/CoupleDependentReason"
+            },
+            "type": "array",
+            "title": "Dependent Reasons"
+          },
+          "tips": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tips"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "model",
+          "summary",
+          "dependent_reasons",
+          "tips",
+          "disclaimer"
+        ],
+        "title": "CoupleRecommendationResponse"
+      },
+      "CreditMethod": {
+        "type": "string",
+        "enum": [
+          "itemized",
+          "standard"
+        ],
+        "title": "CreditMethod"
+      },
+      "Dependent": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Name",
+            "default": ""
+          },
+          "relation": {
+            "$ref": "#/components/schemas/Relation"
+          },
+          "birth_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 1900.0,
+            "title": "Birth Year"
+          },
+          "disabled": {
+            "type": "boolean",
+            "title": "Disabled",
+            "default": false
+          },
+          "income_amount": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Income Amount",
+            "description": "연간 소득금액 합계 (근로소득만 있으면 총급여)",
+            "default": 0
+          },
+          "income_is_salary_only": {
+            "type": "boolean",
+            "title": "Income Is Salary Only",
+            "description": "근로소득만 있는지 여부",
+            "default": false
+          },
+          "born_or_adopted_this_year": {
+            "type": "boolean",
+            "title": "Born Or Adopted This Year",
+            "description": "해당 연도 출생·입양 여부",
+            "default": false
+          },
+          "child_order": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Child Order",
+            "description": "출생·입양 자녀의 순서"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "relation",
+          "birth_year"
+        ],
+        "title": "Dependent",
+        "description": "부양가족 (본인 제외)."
+      },
+      "DonationCreditRules": {
+        "properties": {
+          "political_full_credit_limit": {
+            "type": "integer",
+            "title": "Political Full Credit Limit"
+          },
+          "political_full_credit_ratio": {
+            "type": "string",
+            "title": "Political Full Credit Ratio"
+          },
+          "political_tiers": {
+            "items": {
+              "$ref": "#/components/schemas/RateTier"
+            },
+            "type": "array",
+            "title": "Political Tiers"
+          },
+          "hometown_full_credit_limit": {
+            "type": "integer",
+            "title": "Hometown Full Credit Limit"
+          },
+          "hometown_full_credit_ratio": {
+            "type": "string",
+            "title": "Hometown Full Credit Ratio"
+          },
+          "hometown_rate": {
+            "type": "string",
+            "title": "Hometown Rate"
+          },
+          "hometown_disaster_rate": {
+            "type": "string",
+            "title": "Hometown Disaster Rate"
+          },
+          "hometown_annual_limit": {
+            "type": "integer",
+            "title": "Hometown Annual Limit"
+          },
+          "general_tiers": {
+            "items": {
+              "$ref": "#/components/schemas/RateTier"
+            },
+            "type": "array",
+            "title": "General Tiers"
+          },
+          "general_limit_rate": {
+            "type": "string",
+            "title": "General Limit Rate"
+          },
+          "religious_limit_rate": {
+            "type": "string",
+            "title": "Religious Limit Rate"
+          },
+          "religious_extra_limit_rate": {
+            "type": "string",
+            "title": "Religious Extra Limit Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "political_full_credit_limit",
+          "political_full_credit_ratio",
+          "political_tiers",
+          "hometown_full_credit_limit",
+          "hometown_full_credit_ratio",
+          "hometown_rate",
+          "hometown_disaster_rate",
+          "hometown_annual_limit",
+          "general_tiers",
+          "general_limit_rate",
+          "religious_limit_rate",
+          "religious_extra_limit_rate"
+        ],
+        "title": "DonationCreditRules"
+      },
+      "Donations": {
+        "properties": {
+          "political": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Political",
+            "default": 0
+          },
+          "hometown": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Hometown",
+            "default": 0
+          },
+          "hometown_disaster": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Hometown Disaster",
+            "default": 0
+          },
+          "special": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Special",
+            "default": 0
+          },
+          "general": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "General",
+            "default": 0
+          },
+          "religious": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Religious",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Donations"
+      },
+      "EarnedIncomeCreditRules": {
+        "properties": {
+          "tax_threshold": {
+            "type": "integer",
+            "title": "Tax Threshold"
+          },
+          "low_rate": {
+            "type": "string",
+            "title": "Low Rate"
+          },
+          "high_rate": {
+            "type": "string",
+            "title": "High Rate"
+          },
+          "limit_tiers": {
+            "items": {
+              "$ref": "#/components/schemas/LimitTier"
+            },
+            "type": "array",
+            "title": "Limit Tiers"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_threshold",
+          "low_rate",
+          "high_rate",
+          "limit_tiers"
+        ],
+        "title": "EarnedIncomeCreditRules"
+      },
+      "EarnedIncomeDeductionRules": {
+        "properties": {
+          "brackets": {
+            "items": {
+              "$ref": "#/components/schemas/ProgressiveBracket"
+            },
+            "type": "array",
+            "title": "Brackets"
+          },
+          "max_deduction": {
+            "type": "integer",
+            "title": "Max Deduction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "brackets",
+          "max_deduction"
+        ],
+        "title": "EarnedIncomeDeductionRules"
+      },
+      "EducationCreditRules": {
+        "properties": {
+          "rate": {
+            "type": "string",
+            "title": "Rate"
+          },
+          "preschool_limit": {
+            "type": "integer",
+            "title": "Preschool Limit"
+          },
+          "school_limit": {
+            "type": "integer",
+            "title": "School Limit"
+          },
+          "university_limit": {
+            "type": "integer",
+            "title": "University Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "rate",
+          "preschool_limit",
+          "school_limit",
+          "university_limit"
+        ],
+        "title": "EducationCreditRules"
+      },
+      "EducationExpense": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/EducationKind"
+          },
+          "amount": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Amount"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Label",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "amount"
+        ],
+        "title": "EducationExpense",
+        "description": "교육비 1건 = 교육 대상자 1명의 연간 교육비."
+      },
+      "EducationKind": {
+        "type": "string",
+        "enum": [
+          "self",
+          "preschool",
+          "school",
+          "university",
+          "disabled_special"
+        ],
+        "title": "EducationKind"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorResponse"
+      },
+      "HousingRules": {
+        "properties": {
+          "subscription_rate": {
+            "type": "string",
+            "title": "Subscription Rate"
+          },
+          "subscription_payment_limit": {
+            "type": "integer",
+            "title": "Subscription Payment Limit"
+          },
+          "subscription_gross_salary_limit": {
+            "type": "integer",
+            "title": "Subscription Gross Salary Limit"
+          },
+          "rent_loan_rate": {
+            "type": "string",
+            "title": "Rent Loan Rate"
+          },
+          "rent_loan_and_subscription_limit": {
+            "type": "integer",
+            "title": "Rent Loan And Subscription Limit"
+          },
+          "mortgage_limits": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/MortgageType"
+            },
+            "type": "object",
+            "title": "Mortgage Limits"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "subscription_rate",
+          "subscription_payment_limit",
+          "subscription_gross_salary_limit",
+          "rent_loan_rate",
+          "rent_loan_and_subscription_limit",
+          "mortgage_limits"
+        ],
+        "title": "HousingRules"
+      },
+      "Income": {
+        "properties": {
+          "annual_earned_income": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Annual Earned Income",
+            "description": "연간 근로소득 (비과세 포함)"
+          },
+          "non_taxable_income": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Non Taxable Income",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annual_earned_income"
+        ],
+        "title": "Income"
+      },
+      "IncomeDeductionInput": {
+        "properties": {
+          "national_pension": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "National Pension",
+            "default": 0
+          },
+          "health_insurance": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Health Insurance",
+            "default": 0
+          },
+          "employment_insurance": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Employment Insurance",
+            "default": 0
+          },
+          "housing_rent_loan_repayment": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Housing Rent Loan Repayment",
+            "default": 0
+          },
+          "long_term_mortgage_interest": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Long Term Mortgage Interest",
+            "default": 0
+          },
+          "mortgage_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MortgageType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "housing_subscription": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Housing Subscription",
+            "default": 0
+          },
+          "card": {
+            "$ref": "#/components/schemas/CardUsage",
+            "default": {
+              "credit": 0,
+              "debit_cash": 0,
+              "culture": 0,
+              "sports_facility": 0,
+              "traditional_market": 0,
+              "public_transport": 0
+            }
+          },
+          "venture_direct": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Venture Direct",
+            "default": 0
+          },
+          "venture_fund": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Venture Fund",
+            "default": 0
+          },
+          "national_growth_fund": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "National Growth Fund",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "IncomeDeductionInput"
+      },
+      "InputDiff": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "before": {
+            "title": "Before"
+          },
+          "after": {
+            "title": "After"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "path",
+          "before",
+          "after"
+        ],
+        "title": "InputDiff"
+      },
+      "InsuranceCreditRules": {
+        "properties": {
+          "general_limit": {
+            "type": "integer",
+            "title": "General Limit"
+          },
+          "general_rate": {
+            "type": "string",
+            "title": "General Rate"
+          },
+          "disabled_limit": {
+            "type": "integer",
+            "title": "Disabled Limit"
+          },
+          "disabled_rate": {
+            "type": "string",
+            "title": "Disabled Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "general_limit",
+          "general_rate",
+          "disabled_limit",
+          "disabled_rate"
+        ],
+        "title": "InsuranceCreditRules"
+      },
+      "ItemDiff": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "before": {
+            "type": "integer",
+            "title": "Before"
+          },
+          "after": {
+            "type": "integer",
+            "title": "After"
+          },
+          "delta": {
+            "type": "integer",
+            "title": "Delta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "before",
+          "after",
+          "delta"
+        ],
+        "title": "ItemDiff"
+      },
+      "LimitTier": {
+        "properties": {
+          "lower": {
+            "type": "integer",
+            "title": "Lower"
+          },
+          "upper": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upper"
+          },
+          "base": {
+            "type": "integer",
+            "title": "Base"
+          },
+          "reduction_rate": {
+            "type": "string",
+            "title": "Reduction Rate"
+          },
+          "floor": {
+            "type": "integer",
+            "title": "Floor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lower",
+          "upper",
+          "base",
+          "reduction_rate",
+          "floor"
+        ],
+        "title": "LimitTier",
+        "description": "총급여 구간별 한도: ``max(base − (총급여 − lower) × reduction_rate, floor)``."
+      },
+      "LocalIncomeTax": {
+        "properties": {
+          "determined_tax": {
+            "type": "integer",
+            "title": "Determined Tax"
+          },
+          "prepaid_tax": {
+            "type": "integer",
+            "title": "Prepaid Tax"
+          },
+          "balance_due": {
+            "type": "integer",
+            "title": "Balance Due"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "determined_tax",
+          "prepaid_tax",
+          "balance_due"
+        ],
+        "title": "LocalIncomeTax"
+      },
+      "MedicalCreditRules": {
+        "properties": {
+          "threshold_rate": {
+            "type": "string",
+            "title": "Threshold Rate"
+          },
+          "general_limit": {
+            "type": "integer",
+            "title": "General Limit"
+          },
+          "general_rate": {
+            "type": "string",
+            "title": "General Rate"
+          },
+          "specific_rate": {
+            "type": "string",
+            "title": "Specific Rate"
+          },
+          "premature_rate": {
+            "type": "string",
+            "title": "Premature Rate"
+          },
+          "infertility_rate": {
+            "type": "string",
+            "title": "Infertility Rate"
+          },
+          "specific_min_age": {
+            "type": "integer",
+            "title": "Specific Min Age"
+          },
+          "specific_max_age_at_start": {
+            "type": "integer",
+            "title": "Specific Max Age At Start"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "threshold_rate",
+          "general_limit",
+          "general_rate",
+          "specific_rate",
+          "premature_rate",
+          "infertility_rate",
+          "specific_min_age",
+          "specific_max_age_at_start"
+        ],
+        "title": "MedicalCreditRules"
+      },
+      "MedicalExpenses": {
+        "properties": {
+          "general": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "General",
+            "default": 0
+          },
+          "specific": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Specific",
+            "default": 0
+          },
+          "premature": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Premature",
+            "default": 0
+          },
+          "infertility": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Infertility",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "MedicalExpenses"
+      },
+      "MethodComparison": {
+        "properties": {
+          "method": {
+            "$ref": "#/components/schemas/CreditMethod"
+          },
+          "tax_base": {
+            "type": "integer",
+            "title": "Tax Base"
+          },
+          "calculated_tax": {
+            "type": "integer",
+            "title": "Calculated Tax"
+          },
+          "total_tax_credit": {
+            "type": "integer",
+            "title": "Total Tax Credit"
+          },
+          "determined_tax": {
+            "type": "integer",
+            "title": "Determined Tax"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "method",
+          "tax_base",
+          "calculated_tax",
+          "total_tax_credit",
+          "determined_tax"
+        ],
+        "title": "MethodComparison"
+      },
+      "MetricDiff": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "before": {
+            "type": "integer",
+            "title": "Before"
+          },
+          "after": {
+            "type": "integer",
+            "title": "After"
+          },
+          "delta": {
+            "type": "integer",
+            "title": "Delta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "before",
+          "after",
+          "delta"
+        ],
+        "title": "MetricDiff"
+      },
+      "MortgageType": {
+        "type": "string",
+        "enum": [
+          "fixed_and_non_deferred_15y",
+          "fixed_or_non_deferred_15y",
+          "other_15y",
+          "fixed_or_non_deferred_10y"
+        ],
+        "title": "MortgageType",
+        "description": "장기주택저당차입금 이자상환액 공제 한도 유형 (소득세법 제52조 제5항)."
+      },
+      "NationalGrowthFundRules": {
+        "properties": {
+          "tiers": {
+            "items": {
+              "$ref": "#/components/schemas/RateTier"
+            },
+            "type": "array",
+            "title": "Tiers"
+          },
+          "max_deduction": {
+            "type": "integer",
+            "title": "Max Deduction"
+          },
+          "min_holding_years": {
+            "type": "integer",
+            "title": "Min Holding Years"
+          },
+          "included_in_aggregate_limit": {
+            "type": "boolean",
+            "title": "Included In Aggregate Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tiers",
+          "max_deduction",
+          "min_holding_years",
+          "included_in_aggregate_limit"
+        ],
+        "title": "NationalGrowthFundRules",
+        "description": "국민참여형 국민성장펀드 투자 소득공제 (2026년 귀속 신설)."
+      },
+      "PensionAccountRules": {
+        "properties": {
+          "savings_limit": {
+            "type": "integer",
+            "title": "Savings Limit"
+          },
+          "combined_limit": {
+            "type": "integer",
+            "title": "Combined Limit"
+          },
+          "high_rate_gross_salary_limit": {
+            "type": "integer",
+            "title": "High Rate Gross Salary Limit"
+          },
+          "high_rate": {
+            "type": "string",
+            "title": "High Rate"
+          },
+          "low_rate": {
+            "type": "string",
+            "title": "Low Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "savings_limit",
+          "combined_limit",
+          "high_rate_gross_salary_limit",
+          "high_rate",
+          "low_rate"
+        ],
+        "title": "PensionAccountRules"
+      },
+      "PersonalDeductionRules": {
+        "properties": {
+          "basic_per_person": {
+            "type": "integer",
+            "title": "Basic Per Person"
+          },
+          "elderly_additional": {
+            "type": "integer",
+            "title": "Elderly Additional"
+          },
+          "elderly_min_age": {
+            "type": "integer",
+            "title": "Elderly Min Age"
+          },
+          "disabled_additional": {
+            "type": "integer",
+            "title": "Disabled Additional"
+          },
+          "female_additional": {
+            "type": "integer",
+            "title": "Female Additional"
+          },
+          "female_earned_income_limit": {
+            "type": "integer",
+            "title": "Female Earned Income Limit"
+          },
+          "single_parent_additional": {
+            "type": "integer",
+            "title": "Single Parent Additional"
+          },
+          "dependent_income_limit": {
+            "type": "integer",
+            "title": "Dependent Income Limit"
+          },
+          "dependent_salary_only_limit": {
+            "type": "integer",
+            "title": "Dependent Salary Only Limit"
+          },
+          "ascendant_min_age": {
+            "type": "integer",
+            "title": "Ascendant Min Age"
+          },
+          "descendant_max_age": {
+            "type": "integer",
+            "title": "Descendant Max Age"
+          },
+          "sibling_max_age": {
+            "type": "integer",
+            "title": "Sibling Max Age"
+          },
+          "sibling_min_age": {
+            "type": "integer",
+            "title": "Sibling Min Age"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "basic_per_person",
+          "elderly_additional",
+          "elderly_min_age",
+          "disabled_additional",
+          "female_additional",
+          "female_earned_income_limit",
+          "single_parent_additional",
+          "dependent_income_limit",
+          "dependent_salary_only_limit",
+          "ascendant_min_age",
+          "descendant_max_age",
+          "sibling_max_age",
+          "sibling_min_age"
+        ],
+        "title": "PersonalDeductionRules"
+      },
+      "PlanSummary": {
+        "properties": {
+          "assignment": {
+            "items": {
+              "$ref": "#/components/schemas/Spouse"
+            },
+            "type": "array",
+            "title": "Assignment"
+          },
+          "primary_determined_tax": {
+            "type": "integer",
+            "title": "Primary Determined Tax"
+          },
+          "spouse_determined_tax": {
+            "type": "integer",
+            "title": "Spouse Determined Tax"
+          },
+          "combined_determined_tax": {
+            "type": "integer",
+            "title": "Combined Determined Tax"
+          },
+          "combined_local_income_tax": {
+            "type": "integer",
+            "title": "Combined Local Income Tax"
+          },
+          "primary_total_balance_due": {
+            "type": "integer",
+            "title": "Primary Total Balance Due"
+          },
+          "spouse_total_balance_due": {
+            "type": "integer",
+            "title": "Spouse Total Balance Due"
+          },
+          "combined_total_balance_due": {
+            "type": "integer",
+            "title": "Combined Total Balance Due"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "assignment",
+          "primary_determined_tax",
+          "spouse_determined_tax",
+          "combined_determined_tax",
+          "combined_local_income_tax",
+          "primary_total_balance_due",
+          "spouse_total_balance_due",
+          "combined_total_balance_due"
+        ],
+        "title": "PlanSummary"
+      },
+      "PrepaidTax": {
+        "properties": {
+          "withholding": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Withholding",
+            "description": "현 근무지 원천징수 소득세",
+            "default": 0
+          },
+          "previous_employer": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Previous Employer",
+            "description": "종전 근무지 결정세액",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "PrepaidTax"
+      },
+      "ProgressiveBracket": {
+        "properties": {
+          "lower": {
+            "type": "integer",
+            "title": "Lower"
+          },
+          "upper": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upper"
+          },
+          "base_amount": {
+            "type": "integer",
+            "title": "Base Amount"
+          },
+          "rate": {
+            "type": "string",
+            "title": "Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lower",
+          "upper",
+          "base_amount",
+          "rate"
+        ],
+        "title": "ProgressiveBracket",
+        "description": "``lower`` 초과 ``upper`` 이하 구간: ``base_amount + (금액 - lower) × rate``."
+      },
+      "RateTier": {
+        "properties": {
+          "upper": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upper"
+          },
+          "rate": {
+            "type": "string",
+            "title": "Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "upper",
+          "rate"
+        ],
+        "title": "RateTier",
+        "description": "누적 금액 ``upper``까지 적용되는 공제율 구간 (upper=None이면 상한 없음)."
+      },
+      "Recommendation": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "category": {
+            "$ref": "#/components/schemas/RecommendationCategory"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "adjustment_field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adjustment Field"
+          },
+          "adjustment_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adjustment Label"
+          },
+          "additional_amount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Additional Amount"
+          },
+          "estimated_saving": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Saving",
+            "description": "계산 엔진이 산출한 예상 절세액(지방소득세 포함, 원). 금액 조정이 없으면 null"
+          },
+          "adjusted_input": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SimulationInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "추천을 반영한 입력 (프론트의 '적용' 버튼용)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "category",
+          "reason",
+          "action",
+          "adjustment_field",
+          "adjustment_label",
+          "additional_amount",
+          "estimated_saving",
+          "adjusted_input"
+        ],
+        "title": "Recommendation"
+      },
+      "RecommendationCategory": {
+        "type": "string",
+        "enum": [
+          "income_deduction",
+          "tax_credit",
+          "eligibility_check",
+          "other"
+        ],
+        "title": "RecommendationCategory"
+      },
+      "RecommendationResponse": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "base_total_balance_due": {
+            "type": "integer",
+            "title": "Base Total Balance Due"
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/Recommendation"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          },
+          "discarded_count": {
+            "type": "integer",
+            "title": "Discarded Count",
+            "description": "절세 효과가 없어 제외한 AI 제안 수"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "model",
+          "summary",
+          "base_total_balance_due",
+          "recommendations",
+          "discarded_count",
+          "disclaimer"
+        ],
+        "title": "RecommendationResponse"
+      },
+      "Relation": {
+        "type": "string",
+        "enum": [
+          "spouse",
+          "lineal_ascendant",
+          "lineal_descendant",
+          "sibling",
+          "foster_child"
+        ],
+        "title": "Relation"
+      },
+      "RentCreditRules": {
+        "properties": {
+          "gross_salary_limit": {
+            "type": "integer",
+            "title": "Gross Salary Limit"
+          },
+          "high_rate_gross_salary_limit": {
+            "type": "integer",
+            "title": "High Rate Gross Salary Limit"
+          },
+          "high_rate": {
+            "type": "string",
+            "title": "High Rate"
+          },
+          "low_rate": {
+            "type": "string",
+            "title": "Low Rate"
+          },
+          "payment_limit": {
+            "type": "integer",
+            "title": "Payment Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "gross_salary_limit",
+          "high_rate_gross_salary_limit",
+          "high_rate",
+          "low_rate",
+          "payment_limit"
+        ],
+        "title": "RentCreditRules"
+      },
+      "RulesYears": {
+        "properties": {
+          "supported_years": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Supported Years"
+          },
+          "default_tax_year": {
+            "type": "integer",
+            "title": "Default Tax Year"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "supported_years",
+          "default_tax_year"
+        ],
+        "title": "RulesYears"
+      },
+      "SharedDependent": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Name",
+            "default": ""
+          },
+          "relation": {
+            "$ref": "#/components/schemas/Relation"
+          },
+          "birth_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 1900.0,
+            "title": "Birth Year"
+          },
+          "disabled": {
+            "type": "boolean",
+            "title": "Disabled",
+            "default": false
+          },
+          "income_amount": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Income Amount",
+            "default": 0
+          },
+          "income_is_salary_only": {
+            "type": "boolean",
+            "title": "Income Is Salary Only",
+            "default": false
+          },
+          "born_or_adopted_this_year": {
+            "type": "boolean",
+            "title": "Born Or Adopted This Year",
+            "default": false
+          },
+          "child_order": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Child Order"
+          },
+          "medical_expense": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Medical Expense",
+            "description": "이 가족을 위해 지출한 의료비",
+            "default": 0
+          },
+          "education_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EducationKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "education_amount": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Education Amount",
+            "default": 0
+          },
+          "assigned_to": {
+            "$ref": "#/components/schemas/Spouse",
+            "description": "현재 공제받을 예정인 사람",
+            "default": "primary"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "relation",
+          "birth_year"
+        ],
+        "title": "SharedDependent",
+        "description": "부부 중 누가 공제받을지 정할 부양가족과 그 가족을 위해 지출한 의료비·교육비."
+      },
+      "SimulationComparison": {
+        "properties": {
+          "base": {
+            "$ref": "#/components/schemas/SimulationSummary"
+          },
+          "snapshot_differs": {
+            "type": "boolean",
+            "title": "Snapshot Differs",
+            "description": "저장 당시 결과 스냅샷과 현재 규칙으로 다시 계산한 기준 결과가 다른지 (세법 규칙 변경 등)"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ComparisonResult"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "base",
+          "snapshot_differs",
+          "comparison"
+        ],
+        "title": "SimulationComparison",
+        "description": "저장본(기준)과 변경안 비교. 기준 결과는 현재 규칙으로 다시 계산한 값이다."
+      },
+      "SimulationCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "input": {
+            "$ref": "#/components/schemas/SimulationInput"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "input"
+        ],
+        "title": "SimulationCreate"
+      },
+      "SimulationExport": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Schema Version"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "exported_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exported At"
+          },
+          "input": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "tax_year",
+          "name",
+          "input"
+        ],
+        "title": "SimulationExport",
+        "description": "JSON 내보내기/가져오기 문서."
+      },
+      "SimulationInput": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Tax Year"
+          },
+          "income": {
+            "$ref": "#/components/schemas/Income"
+          },
+          "prepaid_tax": {
+            "$ref": "#/components/schemas/PrepaidTax",
+            "default": {
+              "withholding": 0,
+              "previous_employer": 0
+            }
+          },
+          "taxpayer": {
+            "$ref": "#/components/schemas/Taxpayer"
+          },
+          "dependents": {
+            "items": {
+              "$ref": "#/components/schemas/Dependent"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Dependents",
+            "default": []
+          },
+          "deductions": {
+            "$ref": "#/components/schemas/IncomeDeductionInput",
+            "default": {
+              "national_pension": 0,
+              "health_insurance": 0,
+              "employment_insurance": 0,
+              "housing_rent_loan_repayment": 0,
+              "long_term_mortgage_interest": 0,
+              "housing_subscription": 0,
+              "card": {
+                "credit": 0,
+                "culture": 0,
+                "debit_cash": 0,
+                "public_transport": 0,
+                "sports_facility": 0,
+                "traditional_market": 0
+              },
+              "venture_direct": 0,
+              "venture_fund": 0,
+              "national_growth_fund": 0
+            }
+          },
+          "credits": {
+            "$ref": "#/components/schemas/TaxCreditInput",
+            "default": {
+              "pension_savings": 0,
+              "irp": 0,
+              "insurance_general": 0,
+              "insurance_disabled": 0,
+              "medical": {
+                "general": 0,
+                "infertility": 0,
+                "premature": 0,
+                "specific": 0
+              },
+              "education": [],
+              "donations": {
+                "general": 0,
+                "hometown": 0,
+                "hometown_disaster": 0,
+                "political": 0,
+                "religious": 0,
+                "special": 0
+              },
+              "monthly_rent": 0
+            }
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "income",
+          "taxpayer"
+        ],
+        "title": "SimulationInput"
+      },
+      "SimulationRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version"
+          },
+          "determined_tax": {
+            "type": "integer",
+            "title": "Determined Tax"
+          },
+          "total_balance_due": {
+            "type": "integer",
+            "title": "Total Balance Due"
+          },
+          "source_simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Simulation Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "input": {
+            "$ref": "#/components/schemas/SimulationInput"
+          },
+          "result": {
+            "$ref": "#/components/schemas/TaxResult"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tax_year",
+          "schema_version",
+          "determined_tax",
+          "total_balance_due",
+          "source_simulation_id",
+          "created_at",
+          "updated_at",
+          "input",
+          "result"
+        ],
+        "title": "SimulationRead"
+      },
+      "SimulationSummary": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version"
+          },
+          "determined_tax": {
+            "type": "integer",
+            "title": "Determined Tax"
+          },
+          "total_balance_due": {
+            "type": "integer",
+            "title": "Total Balance Due"
+          },
+          "source_simulation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Simulation Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tax_year",
+          "schema_version",
+          "determined_tax",
+          "total_balance_due",
+          "source_simulation_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "SimulationSummary"
+      },
+      "SimulationUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "input": {
+            "$ref": "#/components/schemas/SimulationInput"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "input"
+        ],
+        "title": "SimulationUpdate"
+      },
+      "SimulationWithWarnings": {
+        "properties": {
+          "simulation": {
+            "$ref": "#/components/schemas/SimulationRead"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/CalcWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "simulation",
+          "warnings"
+        ],
+        "title": "SimulationWithWarnings"
+      },
+      "Spouse": {
+        "type": "string",
+        "enum": [
+          "primary",
+          "spouse"
+        ],
+        "title": "Spouse"
+      },
+      "TaxCreditInput": {
+        "properties": {
+          "pension_savings": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Pension Savings",
+            "default": 0
+          },
+          "irp": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Irp",
+            "default": 0
+          },
+          "insurance_general": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Insurance General",
+            "default": 0
+          },
+          "insurance_disabled": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Insurance Disabled",
+            "default": 0
+          },
+          "medical": {
+            "$ref": "#/components/schemas/MedicalExpenses",
+            "default": {
+              "general": 0,
+              "specific": 0,
+              "premature": 0,
+              "infertility": 0
+            }
+          },
+          "education": {
+            "items": {
+              "$ref": "#/components/schemas/EducationExpense"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Education",
+            "default": []
+          },
+          "donations": {
+            "$ref": "#/components/schemas/Donations",
+            "default": {
+              "political": 0,
+              "hometown": 0,
+              "hometown_disaster": 0,
+              "special": 0,
+              "general": 0,
+              "religious": 0
+            }
+          },
+          "monthly_rent": {
+            "type": "integer",
+            "maximum": 10000000000000.0,
+            "minimum": 0.0,
+            "title": "Monthly Rent",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "TaxCreditInput"
+      },
+      "TaxRateBracket": {
+        "properties": {
+          "upper": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upper"
+          },
+          "rate": {
+            "type": "string",
+            "title": "Rate"
+          },
+          "progressive_deduction": {
+            "type": "integer",
+            "title": "Progressive Deduction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "upper",
+          "rate",
+          "progressive_deduction"
+        ],
+        "title": "TaxRateBracket",
+        "description": "기본세율 구간 (누진공제액 방식): 세액 = 과세표준 × rate − progressive_deduction."
+      },
+      "TaxResult": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "rules_verified": {
+            "type": "boolean",
+            "title": "Rules Verified"
+          },
+          "annual_earned_income": {
+            "type": "integer",
+            "title": "Annual Earned Income"
+          },
+          "non_taxable_income": {
+            "type": "integer",
+            "title": "Non Taxable Income"
+          },
+          "gross_salary": {
+            "type": "integer",
+            "title": "Gross Salary"
+          },
+          "earned_income_deduction": {
+            "$ref": "#/components/schemas/BreakdownItem"
+          },
+          "earned_income_amount": {
+            "type": "integer",
+            "title": "Earned Income Amount"
+          },
+          "applied_method": {
+            "$ref": "#/components/schemas/CreditMethod"
+          },
+          "method_comparison": {
+            "items": {
+              "$ref": "#/components/schemas/MethodComparison"
+            },
+            "type": "array",
+            "title": "Method Comparison"
+          },
+          "income_deductions": {
+            "items": {
+              "$ref": "#/components/schemas/BreakdownItem"
+            },
+            "type": "array",
+            "title": "Income Deductions"
+          },
+          "total_income_deduction": {
+            "type": "integer",
+            "title": "Total Income Deduction"
+          },
+          "tax_base": {
+            "type": "integer",
+            "title": "Tax Base"
+          },
+          "tax_rate": {
+            "type": "string",
+            "title": "Tax Rate"
+          },
+          "calculated_tax": {
+            "type": "integer",
+            "title": "Calculated Tax"
+          },
+          "tax_reduction": {
+            "type": "integer",
+            "title": "Tax Reduction"
+          },
+          "tax_credits": {
+            "items": {
+              "$ref": "#/components/schemas/BreakdownItem"
+            },
+            "type": "array",
+            "title": "Tax Credits"
+          },
+          "total_tax_credit": {
+            "type": "integer",
+            "title": "Total Tax Credit"
+          },
+          "determined_tax": {
+            "type": "integer",
+            "title": "Determined Tax"
+          },
+          "prepaid_tax": {
+            "type": "integer",
+            "title": "Prepaid Tax"
+          },
+          "balance_due": {
+            "type": "integer",
+            "title": "Balance Due"
+          },
+          "local_income_tax": {
+            "$ref": "#/components/schemas/LocalIncomeTax"
+          },
+          "total_balance_due": {
+            "type": "integer",
+            "title": "Total Balance Due"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/CalcWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "rules_verified",
+          "annual_earned_income",
+          "non_taxable_income",
+          "gross_salary",
+          "earned_income_deduction",
+          "earned_income_amount",
+          "applied_method",
+          "method_comparison",
+          "income_deductions",
+          "total_income_deduction",
+          "tax_base",
+          "tax_rate",
+          "calculated_tax",
+          "tax_reduction",
+          "tax_credits",
+          "total_tax_credit",
+          "determined_tax",
+          "prepaid_tax",
+          "balance_due",
+          "local_income_tax",
+          "total_balance_due",
+          "warnings",
+          "disclaimer"
+        ],
+        "title": "TaxResult"
+      },
+      "TaxRules": {
+        "properties": {
+          "tax_year": {
+            "type": "integer",
+            "title": "Tax Year"
+          },
+          "verified": {
+            "type": "boolean",
+            "title": "Verified"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          },
+          "earned_income_deduction": {
+            "$ref": "#/components/schemas/EarnedIncomeDeductionRules"
+          },
+          "personal": {
+            "$ref": "#/components/schemas/PersonalDeductionRules"
+          },
+          "housing": {
+            "$ref": "#/components/schemas/HousingRules"
+          },
+          "card": {
+            "$ref": "#/components/schemas/CardRules"
+          },
+          "venture": {
+            "$ref": "#/components/schemas/VentureRules"
+          },
+          "national_growth_fund": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NationalGrowthFundRules"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "aggregate_deduction_limit": {
+            "type": "integer",
+            "title": "Aggregate Deduction Limit"
+          },
+          "tax_rate_brackets": {
+            "items": {
+              "$ref": "#/components/schemas/TaxRateBracket"
+            },
+            "type": "array",
+            "title": "Tax Rate Brackets"
+          },
+          "earned_income_credit": {
+            "$ref": "#/components/schemas/EarnedIncomeCreditRules"
+          },
+          "child_credit": {
+            "$ref": "#/components/schemas/ChildCreditRules"
+          },
+          "pension_account": {
+            "$ref": "#/components/schemas/PensionAccountRules"
+          },
+          "insurance_credit": {
+            "$ref": "#/components/schemas/InsuranceCreditRules"
+          },
+          "medical_credit": {
+            "$ref": "#/components/schemas/MedicalCreditRules"
+          },
+          "education_credit": {
+            "$ref": "#/components/schemas/EducationCreditRules"
+          },
+          "donation_credit": {
+            "$ref": "#/components/schemas/DonationCreditRules"
+          },
+          "rent_credit": {
+            "$ref": "#/components/schemas/RentCreditRules"
+          },
+          "standard_credit": {
+            "type": "integer",
+            "title": "Standard Credit"
+          },
+          "marriage_credit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marriage Credit"
+          },
+          "local_income_tax_rate": {
+            "type": "string",
+            "title": "Local Income Tax Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tax_year",
+          "verified",
+          "notes",
+          "earned_income_deduction",
+          "personal",
+          "housing",
+          "card",
+          "venture",
+          "national_growth_fund",
+          "aggregate_deduction_limit",
+          "tax_rate_brackets",
+          "earned_income_credit",
+          "child_credit",
+          "pension_account",
+          "insurance_credit",
+          "medical_credit",
+          "education_credit",
+          "donation_credit",
+          "rent_credit",
+          "standard_credit",
+          "marriage_credit",
+          "local_income_tax_rate"
+        ],
+        "title": "TaxRules",
+        "description": "한 귀속연도의 근로소득 연말정산 규칙 묶음."
+      },
+      "Taxpayer": {
+        "properties": {
+          "birth_year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 1900.0,
+            "title": "Birth Year"
+          },
+          "is_female": {
+            "type": "boolean",
+            "title": "Is Female",
+            "default": false
+          },
+          "is_married": {
+            "type": "boolean",
+            "title": "Is Married",
+            "description": "배우자가 있는지 여부",
+            "default": false
+          },
+          "is_household_head": {
+            "type": "boolean",
+            "title": "Is Household Head",
+            "default": false
+          },
+          "disabled": {
+            "type": "boolean",
+            "title": "Disabled",
+            "default": false
+          },
+          "is_homeless": {
+            "type": "boolean",
+            "title": "Is Homeless",
+            "description": "무주택 세대주(또는 요건 충족 세대원) 여부",
+            "default": false
+          },
+          "marriage_registered_this_year": {
+            "type": "boolean",
+            "title": "Marriage Registered This Year",
+            "description": "해당 연도 혼인신고 여부",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "birth_year"
+        ],
+        "title": "Taxpayer"
+      },
+      "VentureRules": {
+        "properties": {
+          "direct_tiers": {
+            "items": {
+              "$ref": "#/components/schemas/RateTier"
+            },
+            "type": "array",
+            "title": "Direct Tiers"
+          },
+          "fund_rate": {
+            "type": "string",
+            "title": "Fund Rate"
+          },
+          "income_limit_rate": {
+            "type": "string",
+            "title": "Income Limit Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "direct_tiers",
+          "fund_rate",
+          "income_limit_rate"
+        ],
+        "title": "VentureRules"
+      },
+      "WarningLevel": {
+        "type": "string",
+        "enum": [
+          "info",
+          "warning"
+        ],
+        "title": "WarningLevel"
+      }
+    }
+  }
+}

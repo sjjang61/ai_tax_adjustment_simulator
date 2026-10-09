@@ -1,0 +1,46 @@
+{
+  "name": "맞벌이 아님 4인+부모, 총급여 8,260만원, 고소득 카드 한도·근로소득세액공제 하한",
+  "source": "수기 계산(작성자 검산) — 소득세법 제47·50·51·55·59조, 제59조의2~4, 조특법 제58·126조의2 조문 적용. TODO(verify): 국세청 연말정산 안내 계산 사례로 교차 검증 필요",
+  "input": {
+    "tax_year": 2025,
+    "income": {"annual_earned_income": 85000000, "non_taxable_income": 2400000},
+    "prepaid_tax": {"withholding": 9000000},
+    "taxpayer": {"birth_year": 1982, "is_married": true},
+    "dependents": [
+      {"name": "배우자", "relation": "spouse", "birth_year": 1984},
+      {"name": "첫째", "relation": "lineal_descendant", "birth_year": 2012},
+      {"name": "둘째", "relation": "lineal_descendant", "birth_year": 2019},
+      {"name": "어머니", "relation": "lineal_ascendant", "birth_year": 1952}
+    ],
+    "deductions": {
+      "national_pension": 4500000,
+      "health_insurance": 3300000,
+      "employment_insurance": 743400,
+      "card": {"credit": 30000000, "debit_cash": 3000000, "culture": 500000,
+               "traditional_market": 1000000, "public_transport": 600000}
+    },
+    "credits": {
+      "irp": 9000000,
+      "insurance_general": 1200000,
+      "medical": {"general": 2000000, "specific": 1000000},
+      "education": [
+        {"kind": "school", "amount": 4000000, "label": "첫째"},
+        {"kind": "preschool", "amount": 2000000, "label": "둘째"}
+      ],
+      "donations": {"religious": 1200000, "hometown": 100000}
+    }
+  },
+  "expected": {
+    "gross_salary": 82600000,
+    "earned_income_amount": 68720000,
+    "total_income_deduction": 20060900,
+    "tax_base": 48659100,
+    "calculated_tax": 6038865,
+    "total_tax_credit": 3049209,
+    "determined_tax": 2989656,
+    "applied_method": "itemized",
+    "balance_due": -6010340,
+    "local_income_tax": {"determined_tax": 298965, "prepaid_tax": 900000, "balance_due": -601030},
+    "total_balance_due": -6611370
+  }
+}

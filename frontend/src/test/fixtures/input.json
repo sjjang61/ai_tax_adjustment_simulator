@@ -1,0 +1,63 @@
+{
+  "tax_year": 2025,
+  "income": {
+    "annual_earned_income": 60000000,
+    "non_taxable_income": 2400000
+  },
+  "prepaid_tax": {
+    "withholding": 3000000,
+    "previous_employer": 0
+  },
+  "taxpayer": {
+    "birth_year": 1988,
+    "is_female": false,
+    "is_married": false,
+    "is_household_head": false,
+    "disabled": false,
+    "is_homeless": false,
+    "marriage_registered_this_year": false
+  },
+  "dependents": [],
+  "deductions": {
+    "national_pension": 2592000,
+    "health_insurance": 2270000,
+    "employment_insurance": 518000,
+    "housing_rent_loan_repayment": 0,
+    "long_term_mortgage_interest": 0,
+    "mortgage_type": null,
+    "housing_subscription": 0,
+    "card": {
+      "credit": 20000000,
+      "debit_cash": 5000000,
+      "culture": 0,
+      "sports_facility": 0,
+      "traditional_market": 0,
+      "public_transport": 800000
+    },
+    "venture_direct": 0,
+    "venture_fund": 0,
+    "national_growth_fund": 0
+  },
+  "credits": {
+    "pension_savings": 6000000,
+    "irp": 0,
+    "insurance_general": 1000000,
+    "insurance_disabled": 0,
+    "medical": {
+      "general": 0,
+      "specific": 3000000,
+      "premature": 0,
+      "infertility": 0
+    },
+    "education": [],
+    "donations": {
+      "political": 0,
+      "hometown": 0,
+      "hometown_disaster": 0,
+      "special": 0,
+      "general": 0,
+      "religious": 0
+    },
+    "monthly_rent": 0
+  }
+}

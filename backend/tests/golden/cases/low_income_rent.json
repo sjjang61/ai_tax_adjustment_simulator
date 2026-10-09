@@ -1,0 +1,25 @@
+{
+  "name": "총급여 2,000만원, 월세 세액공제가 산출세액 한도에 걸려 결정세액 0원",
+  "source": "수기 계산(작성자 검산) — 소득세법 제47·55·59조, 조특법 제95조의2, 결정세액 0원 하한. TODO(verify): 국세청 연말정산 안내 계산 사례로 교차 검증 필요",
+  "input": {
+    "tax_year": 2025,
+    "income": {"annual_earned_income": 20000000},
+    "prepaid_tax": {"withholding": 150000},
+    "taxpayer": {"birth_year": 1995, "is_homeless": true, "is_household_head": true},
+    "deductions": {"national_pension": 900000, "health_insurance": 709000, "employment_insurance": 160000},
+    "credits": {"monthly_rent": 6000000}
+  },
+  "expected": {
+    "gross_salary": 20000000,
+    "earned_income_amount": 11750000,
+    "total_income_deduction": 3269000,
+    "tax_base": 8481000,
+    "calculated_tax": 508860,
+    "total_tax_credit": 508860,
+    "determined_tax": 0,
+    "applied_method": "itemized",
+    "balance_due": -150000,
+    "local_income_tax": {"determined_tax": 0, "prepaid_tax": 15000, "balance_due": -15000},
+    "total_balance_due": -165000
+  }
+}

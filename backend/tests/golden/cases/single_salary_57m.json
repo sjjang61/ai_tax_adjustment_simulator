@@ -1,0 +1,34 @@
+{
+  "name": "1인 가구, 총급여 5,760만원, 신용카드·연금저축·본인 의료비",
+  "source": "수기 계산(작성자 검산) — 소득세법 제47·55·59조, 제59조의3·4, 조특법 제126조의2 조문 적용. TODO(verify): 국세청 연말정산 안내 계산 사례로 교차 검증 필요",
+  "input": {
+    "tax_year": 2025,
+    "income": {"annual_earned_income": 60000000, "non_taxable_income": 2400000},
+    "prepaid_tax": {"withholding": 3000000},
+    "taxpayer": {"birth_year": 1988},
+    "deductions": {
+      "national_pension": 2592000,
+      "health_insurance": 2270000,
+      "employment_insurance": 518000,
+      "card": {"credit": 20000000, "debit_cash": 5000000, "public_transport": 800000}
+    },
+    "credits": {
+      "pension_savings": 6000000,
+      "insurance_general": 1000000,
+      "medical": {"specific": 3000000}
+    }
+  },
+  "expected": {
+    "gross_salary": 57600000,
+    "earned_income_amount": 44970000,
+    "total_income_deduction": 9540000,
+    "tax_base": 35430000,
+    "calculated_tax": 4054500,
+    "total_tax_credit": 1690800,
+    "determined_tax": 2363700,
+    "applied_method": "itemized",
+    "balance_due": -636300,
+    "local_income_tax": {"determined_tax": 236370, "prepaid_tax": 300000, "balance_due": -63630},
+    "total_balance_due": -699930
+  }
+}

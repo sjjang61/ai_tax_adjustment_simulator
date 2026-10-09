@@ -1,0 +1,445 @@
+{
+  "tax_year": 2025,
+  "rules_verified": true,
+  "annual_earned_income": 60000000,
+  "non_taxable_income": 2400000,
+  "gross_salary": 57600000,
+  "earned_income_deduction": {
+    "key": "earned_income_deduction",
+    "label": "근로소득공제",
+    "applied_amount": 57600000,
+    "applied_unit": "won",
+    "amount": 12630000,
+    "limited": false,
+    "description": "12,000,000원 + (45,000,000원 초과분 × 5%)",
+    "children": []
+  },
+  "earned_income_amount": 44970000,
+  "applied_method": "itemized",
+  "method_comparison": [
+    {
+      "method": "itemized",
+      "tax_base": 35430000,
+      "calculated_tax": 4054500,
+      "total_tax_credit": 1690800,
+      "determined_tax": 2363700
+    },
+    {
+      "method": "standard",
+      "tax_base": 38218000,
+      "calculated_tax": 4472700,
+      "total_tax_credit": 1510000,
+      "determined_tax": 2962700
+    }
+  ],
+  "income_deductions": [
+    {
+      "key": "personal_deduction",
+      "label": "인적공제",
+      "applied_amount": 1,
+      "applied_unit": "count",
+      "amount": 1500000,
+      "limited": false,
+      "description": "",
+      "children": [
+        {
+          "key": "personal_deduction.basic",
+          "label": "기본공제",
+          "applied_amount": 1,
+          "applied_unit": "count",
+          "amount": 1500000,
+          "limited": false,
+          "description": "1명 × 1,500,000원 (본인)",
+          "children": []
+        },
+        {
+          "key": "personal_deduction.additional",
+          "label": "추가공제",
+          "applied_amount": 0,
+          "applied_unit": "count",
+          "amount": 0,
+          "limited": false,
+          "description": "해당 없음",
+          "children": []
+        }
+      ]
+    },
+    {
+      "key": "pension_insurance",
+      "label": "연금보험료공제",
+      "applied_amount": 2592000,
+      "applied_unit": "won",
+      "amount": 2592000,
+      "limited": false,
+      "description": "국민연금 등 공적연금 근로자 부담분 전액 공제",
+      "children": []
+    },
+    {
+      "key": "special",
+      "label": "특별소득공제",
+      "applied_amount": 2788000,
+      "applied_unit": "won",
+      "amount": 2788000,
+      "limited": false,
+      "description": "",
+      "children": [
+        {
+          "key": "special.social_insurance",
+          "label": "건강·고용보험료",
+          "applied_amount": 2788000,
+          "applied_unit": "won",
+          "amount": 2788000,
+          "limited": false,
+          "description": "근로자 부담분 전액 공제 (특별소득공제)",
+          "children": [
+            {
+              "key": "special.social_insurance.health",
+              "label": "건강보험료(장기요양 포함)",
+              "applied_amount": 2270000,
+              "applied_unit": "won",
+              "amount": 2270000,
+              "limited": false,
+              "description": "",
+              "children": []
+            },
+            {
+              "key": "special.social_insurance.employment",
+              "label": "고용보험료",
+              "applied_amount": 518000,
+              "applied_unit": "won",
+              "amount": 518000,
+              "limited": false,
+              "description": "",
+              "children": []
+            }
+          ]
+        },
+        {
+          "key": "special.housing_rent_loan",
+          "label": "주택임차차입금 원리금상환액",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "상환액 × 40%",
+          "children": []
+        },
+        {
+          "key": "special.long_term_mortgage",
+          "label": "장기주택저당차입금 이자상환액",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "",
+          "children": []
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "label": "그 밖의 소득공제",
+      "applied_amount": 25800000,
+      "applied_unit": "won",
+      "amount": 2660000,
+      "limited": false,
+      "description": "",
+      "children": [
+        {
+          "key": "other.housing_subscription",
+          "label": "주택청약종합저축",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "",
+          "children": []
+        },
+        {
+          "key": "other.card",
+          "label": "신용카드 등 사용액",
+          "applied_amount": 25800000,
+          "applied_unit": "won",
+          "amount": 2660000,
+          "limited": false,
+          "description": "최저사용금액 14,400,000원 초과분 공제가능액 2,660,000원 중 기본한도 3,000,000원 + 추가공제 0원(추가한도 3,000,000원)",
+          "children": [
+            {
+              "key": "other.card.credit",
+              "label": "신용카드",
+              "applied_amount": 20000000,
+              "applied_unit": "won",
+              "amount": 840000,
+              "limited": false,
+              "description": "(사용액 − 최저사용금액 차감 14,400,000원) × 15%",
+              "children": []
+            },
+            {
+              "key": "other.card.debit_cash",
+              "label": "직불·선불카드·현금영수증",
+              "applied_amount": 5000000,
+              "applied_unit": "won",
+              "amount": 1500000,
+              "limited": false,
+              "description": "(사용액 − 최저사용금액 차감 0원) × 30%",
+              "children": []
+            },
+            {
+              "key": "other.card.public_transport",
+              "label": "대중교통",
+              "applied_amount": 800000,
+              "applied_unit": "won",
+              "amount": 320000,
+              "limited": false,
+              "description": "(사용액 − 최저사용금액 차감 0원) × 40%",
+              "children": []
+            }
+          ]
+        },
+        {
+          "key": "other.venture",
+          "label": "벤처투자 등",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "",
+          "children": []
+        },
+        {
+          "key": "other.national_growth_fund",
+          "label": "국민성장펀드",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "",
+          "children": []
+        }
+      ]
+    },
+    {
+      "key": "aggregate_limit",
+      "label": "소득공제 종합한도 초과액",
+      "applied_amount": 2660000,
+      "applied_unit": "won",
+      "amount": 0,
+      "limited": false,
+      "description": "종합한도 대상 공제 합계 2,660,000원 (한도 25,000,000원 이내)",
+      "children": []
+    }
+  ],
+  "total_income_deduction": 9540000,
+  "tax_base": 35430000,
+  "tax_rate": "15%",
+  "calculated_tax": 4054500,
+  "tax_reduction": 0,
+  "tax_credits": [
+    {
+      "key": "earned_income_credit",
+      "label": "근로소득세액공제",
+      "applied_amount": 4054500,
+      "applied_unit": "won",
+      "amount": 660000,
+      "limited": true,
+      "description": "1,300,000원 × 55% + 초과분 × 30%, 총급여 기준 한도 660,000원",
+      "children": []
+    },
+    {
+      "key": "child_credit",
+      "label": "자녀세액공제",
+      "applied_amount": 0,
+      "applied_unit": "count",
+      "amount": 0,
+      "limited": false,
+      "description": "",
+      "children": [
+        {
+          "key": "child_credit.general",
+          "label": "자녀 (8세 이상)",
+          "applied_amount": 0,
+          "applied_unit": "count",
+          "amount": 0,
+          "limited": false,
+          "description": "해당 없음",
+          "children": []
+        },
+        {
+          "key": "child_credit.birth",
+          "label": "출산·입양",
+          "applied_amount": 0,
+          "applied_unit": "count",
+          "amount": 0,
+          "limited": false,
+          "description": "해당 없음",
+          "children": []
+        }
+      ]
+    },
+    {
+      "key": "pension_account_credit",
+      "label": "연금계좌세액공제",
+      "applied_amount": 6000000,
+      "applied_unit": "won",
+      "amount": 720000,
+      "limited": false,
+      "description": "공제대상 6,000,000원 (연금저축 한도 6,000,000원, IRP 합산 한도 9,000,000원) × 12%",
+      "children": []
+    },
+    {
+      "key": "special_credit",
+      "label": "특별세액공제",
+      "applied_amount": 4000000,
+      "applied_unit": "won",
+      "amount": 310800,
+      "limited": false,
+      "description": "",
+      "children": [
+        {
+          "key": "insurance_credit",
+          "label": "보험료",
+          "applied_amount": 1000000,
+          "applied_unit": "won",
+          "amount": 120000,
+          "limited": false,
+          "description": "",
+          "children": [
+            {
+              "key": "insurance_credit.general",
+              "label": "보장성보험",
+              "applied_amount": 1000000,
+              "applied_unit": "won",
+              "amount": 120000,
+              "limited": false,
+              "description": "min(납입액, 1,000,000원) × 12%",
+              "children": []
+            },
+            {
+              "key": "insurance_credit.disabled",
+              "label": "장애인전용 보장성보험",
+              "applied_amount": 0,
+              "applied_unit": "won",
+              "amount": 0,
+              "limited": false,
+              "description": "min(납입액, 1,000,000원) × 15%",
+              "children": []
+            }
+          ]
+        },
+        {
+          "key": "medical_credit",
+          "label": "의료비",
+          "applied_amount": 3000000,
+          "applied_unit": "won",
+          "amount": 190800,
+          "limited": false,
+          "description": "총급여의 3%(1,728,000원) 초과 지출분부터 공제",
+          "children": [
+            {
+              "key": "medical_credit.general",
+              "label": "그 밖의 부양가족",
+              "applied_amount": 0,
+              "applied_unit": "won",
+              "amount": 0,
+              "limited": false,
+              "description": "(지출액 − 총급여 3% 1,728,000원), 한도 7,000,000원 × 15%",
+              "children": []
+            },
+            {
+              "key": "medical_credit.specific",
+              "label": "본인·65세 이상·장애인·6세 이하 등",
+              "applied_amount": 3000000,
+              "applied_unit": "won",
+              "amount": 190800,
+              "limited": false,
+              "description": "공제대상 1,272,000원 × 15% (한도 없음)",
+              "children": []
+            },
+            {
+              "key": "medical_credit.premature",
+              "label": "미숙아·선천성이상아",
+              "applied_amount": 0,
+              "applied_unit": "won",
+              "amount": 0,
+              "limited": false,
+              "description": "공제대상 0원 × 20% (한도 없음)",
+              "children": []
+            },
+            {
+              "key": "medical_credit.infertility",
+              "label": "난임시술비",
+              "applied_amount": 0,
+              "applied_unit": "won",
+              "amount": 0,
+              "limited": false,
+              "description": "공제대상 0원 × 30% (한도 없음)",
+              "children": []
+            }
+          ]
+        },
+        {
+          "key": "education_credit",
+          "label": "교육비",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "",
+          "children": []
+        },
+        {
+          "key": "donation.special_general",
+          "label": "특례·일반기부금",
+          "applied_amount": 0,
+          "applied_unit": "won",
+          "amount": 0,
+          "limited": false,
+          "description": "",
+          "children": []
+        }
+      ]
+    },
+    {
+      "key": "donation.statutory",
+      "label": "정치자금·고향사랑기부금",
+      "applied_amount": 0,
+      "applied_unit": "won",
+      "amount": 0,
+      "limited": false,
+      "description": "",
+      "children": []
+    },
+    {
+      "key": "monthly_rent_credit",
+      "label": "월세",
+      "applied_amount": 0,
+      "applied_unit": "won",
+      "amount": 0,
+      "limited": false,
+      "description": "",
+      "children": []
+    },
+    {
+      "key": "marriage_credit",
+      "label": "결혼세액공제",
+      "applied_amount": 0,
+      "applied_unit": "count",
+      "amount": 0,
+      "limited": false,
+      "description": "",
+      "children": []
+    }
+  ],
+  "total_tax_credit": 1690800,
+  "determined_tax": 2363700,
+  "prepaid_tax": 3000000,
+  "balance_due": -636300,
+  "local_income_tax": {
+    "determined_tax": 236370,
+    "prepaid_tax": 300000,
+    "balance_due": -63630
+  },
+  "total_balance_due": -699930,
+  "warnings": [],
+  "disclaimer": "이 결과는 참고용 시뮬레이션이며 실제 연말정산 결과와 다를 수 있습니다. 정확한 금액은 국세청 홈택스 연말정산 간소화 서비스 및 회사 정산 결과를 확인하세요."
+}

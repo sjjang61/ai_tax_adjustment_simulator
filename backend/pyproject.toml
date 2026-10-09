@@ -1,0 +1,55 @@
+[project]
+name = "tax-simulator-backend"
+version = "0.1.0"
+description = "연말정산 시뮬레이터 백엔드 (FastAPI + 순수 함수 세금 계산 엔진)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.143.0",
+    "openai>=3.26.1",
+    "pydantic>=2.14.0",
+    "pydantic-settings>=2.15.0",
+    "pymysql[rsa]>=1.2.3",
+    "sqlalchemy>=2",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "hypothesis>=6.168.5",
+    "mypy>=2.4.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.10",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    # fastapi.testclient 내부 import 경고 (httpx2 전환은 upstream 대응 대기)
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+# - RUF001~003: 한국어 문서·주석에 쓰이는 전각/특수 문자(·, × 등)는 의도된 것이다.
+# - E501: 줄 길이는 ruff format이 관리한다. 한글은 전각 폭(2칸)으로 계산되어 문자열·주석이 과도하게 걸린다.
+ignore = ["RUF001", "RUF002", "RUF003", "E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B011"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+packages = ["app"]
